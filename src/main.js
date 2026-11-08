@@ -23,6 +23,11 @@ function showView(shouldFocus = false) {
 window.addEventListener('hashchange', () => showView(true));
 showView();
 
+$('.skip-link').addEventListener('click', event => {
+  event.preventDefault();
+  $('#main-content').focus();
+});
+
 function make(tag, className, value) {
   const element = document.createElement(tag);
   if (className) element.className = className;
@@ -124,7 +129,7 @@ function prepareEmail() {
   const values = new FormData(form);
   const field = name => String(values.get(name) || '').trim();
   const recipient = submissionEmail ? `To: ${submissionEmail}\n` : '';
-  $('#email-draft-text').value = `${recipient}Subject: Submission to The Human Question: ${field('title')}\n\nDear Editors,\n\nPlease consider my manuscript, “${field('title')}”, for publication in The Human Question: A Journal of Humanistic Inquiry.\n\n${field('contribution')}\n\nAuthor(s): ${field('authors')}\nCorresponding author: ${field('contact')}\n\nConflicts of interest: ${field('conflicts')}\n\n[Before sending: confirm that all authors approve this submission, disclose any simultaneous submission, and explain any use of artificial intelligence or other assistance relevant to the work.]\n\n[Attach the manuscript and a separate title page. Check the journal’s confirmed author guidelines before sending.]\n\nThank you for considering the paper.\n\nKind regards,\n${field('name')}`;
+  $('#email-draft-text').value = `${recipient}Subject: Submission to The Human Question: ${field('title')}\n\nDear Editors,\n\nPlease consider my manuscript, “${field('title')}”, for publication in The Human Question: A Journal of Humanistic Inquiry.\n\n${field('contribution')}\n\nAuthor(s): ${field('authors')}\nCorresponding author: ${field('contact')}\n\nConflicts of interest: ${field('conflicts')}\n\n[Before sending: confirm that all authors approve this submission and that the manuscript is not under consideration by another journal. Disclose any preprint, thesis, related paper or earlier version, and explain any substantive use of artificial intelligence or other assistance.]\n\n[Attach the manuscript and a separate title page. Check the journal’s confirmed author guidelines before sending.]\n\nThank you for considering the paper.\n\nKind regards,\n${field('name')}`;
   $('#email-draft-panel').hidden = false;
   $('#copy-draft').textContent = 'Copy draft';
   $('#draft-status').textContent = 'Nothing has been sent. Review the bracketed notes, attach your manuscript and ' + (submissionEmail ? 'send it to the confirmed submission address.' : 'wait for the confirmed submission address.');
