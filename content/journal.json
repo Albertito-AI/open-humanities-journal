@@ -5,11 +5,11 @@
   "founder": "Albert Tan",
   "officialWebsite": "https://www.alberttansinhon.com",
   "sourceCode": "https://github.com/Albertito-AI/open-humanities-journal",
-  "siteUrl": "https://human-question.travelingbert.chatgpt.site",
+  "siteUrl": "https://thehumanquestionjournal.com",
   "intendedDomain": "https://thehumanquestionjournal.com",
   "submissionEmail": null,
   "issn": null,
   "language": "en-GB",
   "stage": "pilot",
-  "robotsIndex": false
+  "robotsIndex": true
 }
