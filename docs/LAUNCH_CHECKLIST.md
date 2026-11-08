@@ -5,11 +5,12 @@ This checklist supports a static journal website and an email-led editorial proc
 ## Prepare the public pages
 
 - [x] Supply and verify the editorial email address before publishing submission instructions: `editor@thehumanquestionjournal.com`, delivery tested and confirmed by Albert on 8 November 2026.
-- [ ] Insert the actual agreed editor and board details, ownership, journal contact and aims.
+- [x] Publish the President and Editor-in-Chief, ownership, editorial contact and journal aims.
+- [ ] Publish confirmed editorial board details as appointments are made.
 - [ ] Publish the adopted author instructions, peer-review model, publication schedule, fees or absence of fees, rights/licensing policy and complaints/corrections route.
-- [ ] Review the proposed house style and downloadable Word template and PDF specimen. The specimen must remain clearly labelled as a template, never as a published paper.
+- [x] Publish the approved house style guide and specimen as PDFs. The specimen is labelled as a template.
 - [ ] Test the public pages, resource downloads, article links and layout on desktop and mobile.
-- [ ] Link the journal from Albert's official website and verify the journal's intended official domain, `thehumanquestionjournal.com`.
+- [x] Link the journal from Albert’s official website and verify the live domain, `thehumanquestionjournal.com`.
 
 ## Establish the email process
 
