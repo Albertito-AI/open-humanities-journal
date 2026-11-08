@@ -137,3 +137,18 @@ test('published home binds its navigation assets to their current bytes', async 
   const next = changed.match(/src="\/(main\.[a-f0-9]{12}\.js)"/)[1];
   assert.equal(await readFile(join(first.outputDirectory, next), 'utf8'), 'console.log("policies");');
 });
+
+test('deployment includes strict browser headers and public document rules', async t => {
+  const f = await fixture(t, true);
+  await buildProject(f);
+  const headers = await readFile(join(f.rootDir, 'dist/_headers'), 'utf8');
+  for (const control of ["default-src 'none'", "frame-ancestors 'none'", "object-src 'none'", "form-action 'none'", 'X-Content-Type-Options: nosniff', 'Strict-Transport-Security: max-age=31536000']) assert.ok(headers.includes(control));
+  assert.ok(!headers.includes('unsafe-inline') && !headers.includes('unsafe-eval'));
+  const html = await readFile(join(f.rootDir, 'dist/articles/human-institutions/index.html'), 'utf8');
+  assert.doesNotMatch(html, /\sstyle=/);
+  for (const name of ['guide.docx', 'payload.js', 'payload.css', 'payload.html']) {
+    await writeFile(join(f.publicDir, name), 'test fixture');
+    await assert.rejects(buildProject(f), /Unsupported public asset extension/);
+    await rm(join(f.publicDir, name));
+  }
+});

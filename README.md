@@ -39,7 +39,7 @@ Sites can host the generated files through its normal deployment workflow. Other
 
 - Edit the journal's public settings in `content/journal.json`. Add only the verified submission email when the editor is ready to receive manuscripts.
 - Maintain articles in `content/articles.json`, issues in `content/issues.json`, and approved final PDFs in `public/articles/`. Follow [adding articles](docs/ADDING_ARTICLES.md).
-- Follow the [approved production operating standard](docs/publication/OPERATING_STANDARD.md). Keep author instructions and house-style resources current: [Word template](public/resources/The_Human_Question_House_Style_Template.docx) and [PDF preview](public/resources/The_Human_Question_House_Style_Preview.pdf).
+- Follow the [approved production operating standard](docs/publication/OPERATING_STANDARD.md). Keep author instructions and house-style resources current: [PDF house-style specimen](public/resources/The_Human_Question_House_Style_Template.pdf).
 - Build and check the resulting pages, links and downloads before deploying.
 
 GitHub is the website's content-management workflow. There is no author portal, mailbox integration, manuscript tracking service or online peer-review system. Confidential manuscripts, reports, editorial correspondence and account credentials must never enter the public repository.
@@ -59,3 +59,7 @@ Development is directed by Albert Tan with assistance from coding agents. Human 
 ## Connected research and learning
 
 [Albert’s resource guide](https://www.alberttansinhon.com/explore/) connects the journal with his open-access book, teaching companion, research catalogue and creative work. [GitHub profile](https://github.com/Albertito-AI) · [Open learning](https://www.alberttansinhon.com/ibol/) · [Listen and learn](https://www.alberttansinhon.com/listen-and-learn/). Journal submissions go to the editorial address; professional enquiries go through Albert’s personal website. Commercial engagements do not confer publication preference.
+
+## Security checks
+
+See [SECURITY.md](SECURITY.md) and the [maintenance runbook](docs/SECURITY_RUNBOOK.md). Public journal documents are PDF-only. CI inspects PDFs and SVGs for active content, tests hostile inputs, and builds the site with strict Cloudflare response headers. Dependency proposals require review. Incoming manuscripts and review records remain private and are never uploaded to this public repository.

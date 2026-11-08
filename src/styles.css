@@ -100,3 +100,12 @@
 
 /* Policy downloads and related public resources. */
 .policy-summary{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:25px 0 32px;margin:30px 0}.policy-summary p,.policy-card p,.related-resources p{font:16px/1.75 var(--serif);max-width:900px}.policy-summary a,.policy-card a,.related-resources a{text-decoration:underline;text-underline-offset:3px}.policy-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px 55px;margin:40px 0}.policy-card{border-top:1px solid var(--line);padding-top:22px}.policy-card h2,.related-resources h2{font:29px/1.2 var(--serif);margin:15px 0}.policy-card .download-actions{font-size:13px;gap:22px;margin-top:18px}.policy-summary .button{text-decoration:none}.related-resources{width:88%;max-width:1240px;margin:0 auto 50px;border-top:1px solid var(--line);padding-top:28px}@media(max-width:560px){.policy-grid{grid-template-columns:1fr;gap:28px}.policy-card h2{font-size:27px}.site-header nav{gap:8px}.site-header nav a{font-size:12px}.policy-summary p,.policy-card p{font-size:15px}}
+
+/* Article pages use the same strict no-inline-style policy as the homepage. */
+.article-landing{max-width:900px;margin:auto;padding:clamp(24px,6vw,72px) 24px}
+.article-kicker{margin-top:40px;text-transform:uppercase;letter-spacing:.1em;font-size:12px}
+.article-title{font-family:Georgia,serif;font-size:clamp(30px,5vw,54px);line-height:1.15;margin:16px 0 24px}
+.article-authors{font-size:20px}.article-abstract{border-top:1px solid;margin-top:32px;padding-top:24px}
+.article-abstract-text{font-size:18px;line-height:1.8;white-space:pre-wrap}
+.article-downloads{display:flex;flex-wrap:wrap;gap:24px;margin:32px 0}
+.article-footer{margin-top:48px;border-top:1px solid;padding-top:24px}
