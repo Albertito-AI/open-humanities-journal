@@ -121,3 +121,19 @@ test('approved NC-ND rights and confirmed editorial roles survive publication ex
   assert.ok(guide.includes(`President: ${name}`));
   assert.ok(guide.includes(`Editor-in-Chief: ${name}`));
 });
+
+
+test('published home binds its navigation assets to their current bytes', async t => {
+  const f = await fixture(t);
+  await writeFile(join(f.rootDir, 'src/index.html'), '<link rel="stylesheet" href="/styles.css"><script src="/main.js" defer></script>');
+  const first = await buildProject(f);
+  const html = await readFile(join(first.outputDirectory, 'index.html'), 'utf8');
+  const script = html.match(/src="\/(main\.[a-f0-9]{12}\.js)"/)[1];
+  assert.equal(await readFile(join(first.outputDirectory, script), 'utf8'), 'console.log("journal");');
+  await writeFile(join(f.rootDir, 'src/main.js'), 'console.log("policies");');
+  await buildProject(f);
+  const changed = await readFile(join(first.outputDirectory, 'index.html'), 'utf8');
+  assert.ok(!changed.includes(script));
+  const next = changed.match(/src="\/(main\.[a-f0-9]{12}\.js)"/)[1];
+  assert.equal(await readFile(join(first.outputDirectory, next), 'utf8'), 'console.log("policies");');
+});

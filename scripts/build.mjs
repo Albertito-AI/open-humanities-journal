@@ -148,7 +148,17 @@ export async function buildProject({ rootDir = process.cwd() } = {}) {
   for (const asset of assets) if (reserved.has(asset.path) || articles.some(a => asset.path === `articles/${a.slug}/index.html` || asset.path === `articles/${a.slug}.json` || asset.path === `articles/${a.slug}.ris` || asset.path === `articles/${a.slug}.bib`)) throw new Error(`Public asset conflicts with a generated file: ${asset.path}`);
   const staging = await mkdtemp(join(root, '.static-build-'));
   try {
-    for (const [name, contents] of Object.entries(sources)) await write(staging, name, contents);
+    // Version browser assets by their bytes so an earlier cached script cannot
+    // leave newly published navigation routes inaccessible.
+    let homeHtml = sources['index.html'].toString('utf8');
+    for (const name of ['styles.css', 'main.js']) {
+      const digest = createHash('sha256').update(sources[name]).digest('hex').slice(0, 12);
+      const versioned = name.replace('.', `.${digest}.`);
+      homeHtml = homeHtml.replaceAll(`"/${name}"`, `"/${versioned}"`);
+      await write(staging, versioned, sources[name]);
+      await write(staging, name, sources[name]);
+    }
+    await write(staging, 'index.html', homeHtml);
     for (const asset of assets) await write(staging, asset.path, await readFile(asset.source));
     for (const article of articles) {
       const issue = issues.find(i => i.slug === article.issueSlug);
