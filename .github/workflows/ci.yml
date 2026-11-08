@@ -30,7 +30,8 @@ jobs:
       - name: Build public pages
         run: npm run build
       - name: Install pinned PDF inspection dependency
-        run: python3 -m pip install --require-hashes --only-binary=:all: -r requirements-security.txt
+        run: |
+          python3 -m pip install --require-hashes --only-binary=:all: -r requirements-security.txt
       - name: Test publication security checks
         run: python3 -m unittest discover -s tests -p 'test_security_*.py'
       - name: Inspect all public PDFs and SVGs
