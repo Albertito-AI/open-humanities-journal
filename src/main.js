@@ -97,6 +97,9 @@ function configureEmail(journal) {
   $('#submission-address').replaceChildren(link);
   $('#submission-status-text').textContent = 'Submit by email. Include your manuscript, a title page and a covering message. The editors will correspond with you directly.';
 }
+// Keep the public contact and draft helper available if catalogue requests fail.
+configureEmail({submissionEmail: $('#submission-address a')?.textContent.trim()});
+
 async function loadCatalogue() {
   try {
     const response = await fetch('/catalogue.json', { credentials: 'same-origin' });

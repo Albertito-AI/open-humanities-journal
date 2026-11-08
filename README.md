@@ -10,9 +10,11 @@ The journal's process takes place by email: **submission → desk decision → p
 
 ## Current status
 
-The initial website is being prepared for private editorial review before public launch. No submission inbox has yet been supplied or verified, and no accepted articles have been supplied for publication. `submissionEmail` in `content/journal.json` remains `null`. The site must not invent an address or claim that submissions are open.
+The website is live at [thehumanquestionjournal.com](https://thehumanquestionjournal.com), deployed through Cloudflare Pages from this repository’s `main` branch.
 
-The purchased domain is `thehumanquestionjournal.com`. Its connection to the deployment must be verified separately. No ISSN, indexing, affiliations or editorial appointments should be displayed unless confirmed.
+The editorial address is [editor@thehumanquestionjournal.com](mailto:editor@thehumanquestionjournal.com). Albert confirmed a successful delivery test on 8 November 2026 and authorised publication of the address. Cloudflare Email Routing forwards incoming messages to the editor’s existing inbox; outgoing mail from this address has not been verified.
+
+The first issue remains in preparation. No accepted articles have been supplied for publication. Display an ISSN, indexing, affiliations or editorial appointments only after confirmation.
 
 ## Build and preview
 
