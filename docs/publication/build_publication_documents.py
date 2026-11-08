@@ -16,7 +16,7 @@ from docx.opc.constants import RELATIONSHIP_TYPE as RT
 import re
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / 'public/resources'
+OUT = ROOT / '.publication-build'
 OUT.mkdir(parents=True, exist_ok=True)
 GREEN, RUST, GREY = '183E35', 'BC4B31', '696969'
 FONT, SANS = 'Liberation Serif', 'Liberation Sans'
@@ -166,12 +166,12 @@ def note(d,text): add(d,text,'Small')
 
 # 1. Publication style guide: fixed page breaks make the specification easy to use.
 d=new('Publication style guide','House style and production specification','House style guide · v1.0')
-intro(d,'Approved by Albert Tan Sin Hon, President and Editor-in-Chief, on 8 November 2026, this guide establishes the journal’s publication production standard. Its visual structure follows the reference supplied by the founder: an offset opening title and abstract, a single text column, compact serif prose, strong sans-serif headings and page footnotes. The full journal logo replaces the large “Open Access” masthead. Deep green replaces the orange headings and rules; rust is reserved for restrained secondary accents. The accompanying Word template contains the working styles. Authors may submit a clearly formatted manuscript before acceptance; the editorial team applies the publication layout during production.')
+intro(d,'Approved by Albert Tan Sin Hon, President and Editor-in-Chief, on 8 November 2026, this guide establishes the journal’s publication production standard. Its visual structure follows the reference supplied by the founder: an offset opening title and abstract, a single text column, compact serif prose, strong sans-serif headings and page footnotes. The full journal logo replaces the large “Open Access” masthead. Deep green replaces the orange headings and rules; rust is reserved for restrained secondary accents. The accompanying PDF specimen illustrates the finished layout. Authors may submit a clearly formatted manuscript before acceptance; the editorial team applies the publication layout during production.')
 h(d,'1. A recognisable journal page')
 add(d,'Use the complete approved logo, including the monogram and journal name. Keep its proportions and colours intact. On the first page, place it at the upper left, with the journal subtitle and document or article type at the upper right. A fine dark rule separates the masthead from the page. Subsequent pages carry a deep green top rule and a short running title with the page number below.')
 add(d,'Set the article title and subtitle in black. Use deep green for numbered section headings, subheadings and the abstract heading. Use rust sparingly for small labels and the existing question-mark accent. Body text and footnotes remain near black on white. Meaning must remain clear in greyscale.','Normal')
 h(d,'1.1 What authors need to prepare',2)
-add(d,'Supply an anonymised manuscript and a separate title page for review. After acceptance, supply the editable text, complete citations, declarations, permissions and original figures. The template is a production aid; formatting alone does not determine acceptance. The journal charges no submission, review or publication fees.')
+add(d,'Supply an anonymised manuscript and a separate title page for review. After acceptance, supply the editable text, complete citations, declarations, permissions and original figures. The PDF specimen is a production reference; formatting alone does not determine acceptance. The journal charges no submission, review or publication fees.')
 note(d,'This is the journal’s own style. Oxford University Press guidance informs its editorial conventions; no affiliation or endorsement is implied. The visual reference does not establish the truth or citation accuracy of any manuscript.')
 page(d)
 h(d,'2. Page geometry and Word styles')
@@ -300,7 +300,7 @@ note(d,'Send to '+EMAIL+'. Suggested subject: “Submission | [article type] | [
 page(d)
 h(d,'3. Manuscript preparation')
 add(d,'Initial submissions may use any clear and consistent scholarly format. Provide a title, a 150–250-word abstract without abbreviations, citations or footnotes, four to six keywords, informative headings and complete references. Use British English. Number pages. Figures and tables need captions, sources, necessary permissions and descriptive alternative text. Identify the relevant legal or evidential cut-off date where it affects the analysis.')
-add(d,'The final default is footnotes and bibliography. Legal papers follow OSCOLA, fifth edition; other humanities papers follow the journal’s notes-and-bibliography patterns. Discuss any discipline-specific author-date requirement with the editor. The Publication Style Guide and Word template set the final typography. Do not insert a journal logo into the anonymised review copy.','Normal')
+add(d,'The final default is footnotes and bibliography. Legal papers follow OSCOLA, fifth edition; other humanities papers follow the journal’s notes-and-bibliography patterns. Discuss any discipline-specific author-date requirement with the editor. The Publication Style Guide and PDF house-style specimen set the final typography. Do not insert a journal logo into the anonymised review copy.','Normal')
 h(d,'4. Editorial assessment and review')
 add(d,'The editor checks scope, scholarly contribution, completeness, integrity and readiness for review. A desk rejection includes a brief reason. Suitable research and review essays receive double-anonymous review by two independent specialists. Author and reviewer identities are withheld from each other where practicable; public preprints or distinctive research may make identification possible. The handling editor knows the identities and manages conflicts.')
 add(d,'The journal aims to acknowledge a submission within seven days, provide an initial assessment within four weeks and seek external reports within six to eight weeks of reviewer acceptance. These are service targets, not guarantees. The editor will explain material delays. Decisions may request minor or major revision, invite a fresh submission, accept or reject. Reviewer recommendations inform an independent editorial decision.','Normal')

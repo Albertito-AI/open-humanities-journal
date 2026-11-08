@@ -10,9 +10,9 @@ Albert approved the house-style sample on 8 November 2026 and instructed that it
 
 ## Authoritative documents
 
-The [publication style guide](../../public/resources/The_Human_Question_Publication_Style_Guide.pdf) specifies typography, layout, references, declarations and final checks. Use the [editable Word template](../../public/resources/The_Human_Question_House_Style_Template.docx) for accepted articles. The specimen is instructional and has no publication status.
+The [publication style guide](../../public/resources/The_Human_Question_Publication_Style_Guide.pdf) specifies typography, layout, references, declarations and final checks. Use the [PDF house-style specimen](../../public/resources/The_Human_Question_House_Style_Template.pdf) for accepted articles. The specimen is instructional and has no publication status.
 
-The [editorial handbook](../../public/resources/The_Human_Question_Editorial_Handbook.pdf) combines the style guide, specimen, author instructions, editorial and peer-review policy, publication ethics, access/rights/privacy policy, reviewer guide and blank author declaration/agreement. Individual PDFs and editable Word files are available at [Policies](https://thehumanquestionjournal.com/#policies) and [House style](https://thehumanquestionjournal.com/#style).
+The [editorial handbook](../../public/resources/The_Human_Question_Editorial_Handbook.pdf) combines the style guide, specimen, author instructions, editorial and peer-review policy, publication ethics, access/rights/privacy policy, reviewer guide and blank author declaration/agreement. Individual PDFs are available at [Policies](https://thehumanquestionjournal.com/#policies) and [House style](https://thehumanquestionjournal.com/#style).
 
 ## Publication workflow
 
@@ -32,4 +32,4 @@ The current journal has no published articles or assigned ISSN. Do not add ident
 
 ## Maintainer checks
 
-Rebuild Word masters with `python docs/publication/build_publication_documents.py` in an environment with python-docx and the documented fonts. Render and inspect every page before replacing PDFs. The combined handbook must reproduce those final PDFs and retain navigable section bookmarks. The generator does not itself approve text or execute agreements.
+Rebuild temporary production masters outside the public directory with `python docs/publication/build_publication_documents.py` in an environment with python-docx and the documented fonts. Render and inspect every page before replacing PDFs. The combined handbook must reproduce those final PDFs and retain navigable section bookmarks. The generator does not itself approve text or execute agreements.

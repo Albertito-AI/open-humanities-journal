@@ -46,3 +46,7 @@ yarn-error.log*
 
 # Temporary static build staging
 /.static-build-*/
+
+.publication-build/
+.security-venv/
+__pycache__/
