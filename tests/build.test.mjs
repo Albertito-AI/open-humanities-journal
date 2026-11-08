@@ -1,0 +1,103 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtemp, mkdir, writeFile, readFile, rm, symlink } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { createHash } from 'node:crypto';
+import { buildProject, validateJournal, validateArticle, escapeHtml, safeJsonLd } from '../scripts/build.mjs';
+
+const journal = { title: 'The Human Question', subtitle: 'A Journal of Humanistic Inquiry', description: 'Human-centred inquiry.', founder: 'Albert Tan', officialWebsite: 'https://www.alberttansinhon.com', sourceCode: 'https://github.com/Albertito-AI/open-humanities-journal', siteUrl: 'https://preview.example.org', intendedDomain: 'https://thehumanquestionjournal.com', submissionEmail: null, issn: null, language: 'en-GB', stage: 'pilot', robotsIndex: false };
+const issue = { slug: 'volume-1-issue-1', title: 'First issue', volume: '1', number: '1', year: 2026, publishedDate: '2026-11-08' };
+const article = { slug: 'human-institutions', title: 'Human institutions', authors: ['A. Scholar'], abstract: 'A study of people and institutions.', keywords: ['law'], pdf: '/articles/human-institutions.pdf', publishedDate: '2026-11-08', licence: 'CC-BY-4.0', issueSlug: issue.slug, pages: '1–10' };
+
+async function fixture(t, withArticle = false) {
+  const rootDir = await mkdtemp(join(tmpdir(), 'thq-static-test-'));
+  t.after(() => rm(rootDir, { recursive: true, force: true }));
+  for (const path of ['src', 'public/articles', 'content']) await mkdir(join(rootDir, path), { recursive: true });
+  await writeFile(join(rootDir, 'src/index.html'), '<!doctype html><title>Journal test</title>');
+  await writeFile(join(rootDir, 'src/styles.css'), 'body{font-family:serif}');
+  await writeFile(join(rootDir, 'src/main.js'), 'console.log("journal");');
+  await writeFile(join(rootDir, 'content/journal.json'), JSON.stringify(journal));
+  await writeFile(join(rootDir, 'content/issues.json'), JSON.stringify(withArticle ? [issue] : []));
+  await writeFile(join(rootDir, 'content/articles.json'), JSON.stringify(withArticle ? [article] : []));
+  if (withArticle) await writeFile(join(rootDir, 'public/articles/human-institutions.pdf'), '%PDF-1.4\nSynthetic test fixture only\n%%EOF');
+  return { rootDir, publicDir: join(rootDir, 'public') };
+}
+
+test('empty journal builds an honest portable archive and accurate hash manifest', async t => {
+  const f = await fixture(t), result = await buildProject(f);
+  assert.equal(result.articles, 0);
+  const catalogue = JSON.parse(await readFile(join(result.outputDirectory, 'catalogue.json'), 'utf8'));
+  assert.deepEqual(catalogue.articles, []);
+  assert.deepEqual(catalogue.issues, []);
+  assert.equal(catalogue.journal.issn, null);
+  assert.equal(catalogue.journal.submissionEmail, null);
+  assert.match(await readFile(join(result.outputDirectory, 'llms.txt'), 'utf8'), /No articles are published here yet/);
+  assert.match(await readFile(join(result.outputDirectory, 'robots.txt'), 'utf8'), /Disallow: \//);
+  const manifest = JSON.parse(await readFile(join(result.outputDirectory, 'export-manifest.json'), 'utf8'));
+  assert.equal(manifest.format, 'static-journal-directory');
+  for (const file of manifest.files) {
+    const bytes = await readFile(join(result.outputDirectory, file.path));
+    assert.equal(file.bytes, bytes.length);
+    assert.equal(file.sha256, createHash('sha256').update(bytes).digest('hex'));
+  }
+});
+
+test('published article output escapes hostile metadata and excludes private fields', async t => {
+  const f = await fixture(t, true);
+  const hostile = { ...article, title: '</script><img src=x onerror="alert(1)">', abstract: 'Line one\r\nER  -\r\nTY  - BOOK', reviewerEmail: 'confidential@example.org', editorialNotes: 'private decision', doi: null };
+  await writeFile(join(f.rootDir, 'content/articles.json'), JSON.stringify([hostile]));
+  await buildProject(f);
+  const html = await readFile(join(f.rootDir, 'dist/articles/human-institutions/index.html'), 'utf8');
+  assert.equal(html.includes('<img src=x'), false);
+  assert.ok(html.includes('&lt;/script&gt;'));
+  const match = html.match(/<script type="application\/ld\+json">(.*?)<\/script>/s);
+  assert.equal(JSON.parse(match[1]).headline, hostile.title);
+  const catalogue = JSON.parse(await readFile(join(f.rootDir, 'dist/catalogue.json'), 'utf8'));
+  assert.equal(catalogue.articles[0].href, '/articles/human-institutions/');
+  assert.equal(catalogue.articles[0].pdfUrl, 'https://preview.example.org/articles/human-institutions.pdf');
+  assert.equal(JSON.stringify(catalogue).includes('confidential'), false);
+  assert.equal(JSON.stringify(catalogue).includes('private decision'), false);
+  assert.equal(html.includes('citation_doi'), false);
+  const ris = await readFile(join(f.rootDir, 'dist/articles/human-institutions.ris'), 'utf8');
+  assert.equal(ris.split('\r\n').filter(line => line.startsWith('TY  -')).length, 1);
+  assert.equal(ris.split('\r\n').filter(line => line.startsWith('ER  -')).length, 1);
+});
+
+test('validation rejects missing PDF, traversal, encoded path and incorrect issue', async t => {
+  const f = await fixture(t, true), context = { publicDir: f.publicDir, issues: new Set([issue.slug]) };
+  for (const pdf of ['/articles/../secret.pdf', '/articles/%2e%2e/secret.pdf', '/articles/missing.pdf', '/private/paper.pdf', '/articles/paper.html']) await assert.rejects(validateArticle({ ...article, pdf }, context));
+  for (const change of [{ issueSlug: 'unknown' }, { authors: [] }, { publishedDate: '2026-02-31' }, { licence: 'made-up' }]) await assert.rejects(validateArticle({ ...article, ...change }, context));
+});
+
+test('public asset copying refuses hidden files, symlinks and unreferenced manuscripts', async t => {
+  const f = await fixture(t);
+  await writeFile(join(f.publicDir, '.env'), 'SECRET=value');
+  await assert.rejects(buildProject(f), /Hidden public asset/);
+  await rm(join(f.publicDir, '.env'));
+  await writeFile(join(f.rootDir, 'private.txt'), 'private');
+  await symlink(join(f.rootDir, 'private.txt'), join(f.publicDir, 'leak.txt'));
+  await assert.rejects(buildProject(f), /Symbolic links/);
+  await rm(join(f.publicDir, 'leak.txt'));
+  await writeFile(join(f.publicDir, 'articles/unpublished.pdf'), '%PDF-1.4\nprivate draft');
+  await assert.rejects(buildProject(f), /Unreferenced file/);
+});
+
+test('journal metadata omits unknown fields and prevents premature indexing', () => {
+  const j = validateJournal({ ...journal, smtpPassword: 'secret', privateNotes: 'hidden' });
+  assert.equal('smtpPassword' in j, false);
+  assert.equal('privateNotes' in j, false);
+  assert.throws(() => validateJournal({ ...journal, robotsIndex: true }), /connected intended domain/);
+  assert.throws(() => validateJournal({ ...journal, issn: '1234-5678' }), /check digit/);
+  assert.throws(() => validateJournal({ ...journal, sourceCode: 'javascript:alert(1)' }), /HTTPS/);
+  assert.equal(escapeHtml('<a href="x">&'), '&lt;a href=&quot;x&quot;&gt;&amp;');
+  assert.equal(safeJsonLd({ title: '</script>' }).includes('<'), false);
+});
+
+test('failed validation preserves the preceding working distribution', async t => {
+  const f = await fixture(t);
+  await buildProject(f);
+  await writeFile(join(f.rootDir, 'content/articles.json'), JSON.stringify([article]));
+  await assert.rejects(buildProject(f));
+  assert.deepEqual(JSON.parse(await readFile(join(f.rootDir, 'dist/catalogue.json'), 'utf8')).articles, []);
+});
