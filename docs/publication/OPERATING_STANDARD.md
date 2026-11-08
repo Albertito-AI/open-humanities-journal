@@ -18,7 +18,7 @@ The [editorial handbook](../../public/resources/The_Human_Question_Editorial_Han
 
 1. Receive the manuscript, separate title page and declarations privately by email. Record the manuscript reference, correspondence and desk decision.
 2. Assign an independent handling editor when the President and Editor-in-Chief, another editor or a connected person is an author. The conflicted person takes no part in reviewer selection or the decision.
-3. Research articles and scholarly or critical essays require at least two independent double-anonymous reports. Record revisions, responses and a reasoned human editorial decision. Label other content according to its actual assessment route.
+3. Research articles and scholarly review or critical essays require two independent external reports, normally under double-anonymous review. Record revisions, responses and a reasoned human editorial decision. Label other content according to its actual assessment route.
 4. After acceptance, obtain the completed publication agreement, check authorship and permissions, and format the manuscript using the approved template. Authors retain copyright. The normal published article licence is CC BY-NC-ND 4.0. There are no author fees.
 5. Check every quotation, citation, pinpoint, link, figure credit, declaration and metadata field against the final text. Remove instructional placeholders. Obtain all authors' final proof approval through the corresponding author and keep the evidence privately.
 6. Publish only the agreed final PDF and public metadata. Follow [Adding articles](../ADDING_ARTICLES.md), run the repository checks, inspect the built files and verify live downloads. Keep confidential drafts, reports and correspondence outside the public repository.

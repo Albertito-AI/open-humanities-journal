@@ -2,9 +2,9 @@
 
 The website is a static publication site. The editorial office manages submissions and peer review by email. There are no author accounts, database services or online manuscript-tracking requirements.
 
-## Before opening submissions
+## Editorial mailbox
 
-Confirm the submission inbox, test receipt and replies, and decide who may access it. The actual address has not yet been supplied. Keep `submissionEmail` as `null` until it is verified; do not invent an address at the journal's domain.
+The public submission address is `editor@thehumanquestionjournal.com`. Albert confirmed incoming delivery on 8 November 2026. Verify outgoing replies from that address, agree who may access the mailbox and document its recovery arrangements.
 
 Publish the journal's agreed scope, author instructions, house style, review procedure, responsible editors and contact details. Confirm any statements about charges, author rights and licences. The editor decides when the office is ready to receive papers.
 
