@@ -2,6 +2,10 @@
 
 The open-source website for **The Human Question: A Journal of Humanistic Inquiry**.
 
+[Read the journal](https://thehumanquestionjournal.com/) · [Author guidance](https://thehumanquestionjournal.com/#authors) · [Approved publication standard](https://thehumanquestionjournal.com/#style) · [Policies](https://thehumanquestionjournal.com/#policies)
+
+**Albert Tan Sin Hon, President and Editor-in-Chief.**
+
 [Source on GitHub](https://github.com/Albertito-AI/open-humanities-journal) · [Albert Tan's website](https://www.alberttansinhon.com)
 
 This is a small, portable static website: journal information, submission instructions, house style, an article archive and links to final open-access PDFs. It is an independent website, not an OJS installation.
@@ -35,7 +39,7 @@ Sites can host the generated files through its normal deployment workflow. Other
 
 - Edit the journal's public settings in `content/journal.json`. Add only the verified submission email when the editor is ready to receive manuscripts.
 - Maintain articles in `content/articles.json`, issues in `content/issues.json`, and approved final PDFs in `public/articles/`. Follow [adding articles](docs/ADDING_ARTICLES.md).
-- Keep author instructions and house-style resources current: [Word template](public/resources/The_Human_Question_House_Style_Template.docx) and [PDF preview](public/resources/The_Human_Question_House_Style_Preview.pdf).
+- Follow the [approved production operating standard](docs/publication/OPERATING_STANDARD.md). Keep author instructions and house-style resources current: [Word template](public/resources/The_Human_Question_House_Style_Template.docx) and [PDF preview](public/resources/The_Human_Question_House_Style_Preview.pdf).
 - Build and check the resulting pages, links and downloads before deploying.
 
 GitHub is the website's content-management workflow. There is no author portal, mailbox integration, manuscript tracking service or online peer-review system. Confidential manuscripts, reports, editorial correspondence and account credentials must never enter the public repository.
@@ -51,3 +55,7 @@ The original website code is offered under the [MIT licence](LICENSE), including
 The software licence does not grant rights to articles, reviewer reports, personal information, journal names or branding. Each published article requires its own agreed licence. Keep applicable third-party notices with any reused code or assets.
 
 Development is directed by Albert Tan with assistance from coding agents. Human editors remain responsible for peer review, publication decisions and truthful journal information.
+
+## Connected research and learning
+
+[Albert’s resource guide](https://www.alberttansinhon.com/explore/) connects the journal with his open-access book, teaching companion, research catalogue and creative work. [GitHub profile](https://github.com/Albertito-AI) · [Open learning](https://www.alberttansinhon.com/ibol/) · [Listen and learn](https://www.alberttansinhon.com/listen-and-learn/). Journal submissions go to the editorial address; professional enquiries go through Albert’s personal website. Commercial engagements do not confer publication preference.

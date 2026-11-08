@@ -6,7 +6,7 @@ Keep submitted drafts, reviewer reports, contact information and editorial corre
 
 ## Journal settings
 
-Edit `content/journal.json`. The submission email and ISSN are currently `null`. Configure a working submission mailbox before inviting submissions. Add only the ISSN actually assigned to this journal; checksum validation is not proof of assignment.
+Edit `content/journal.json`. The submission email is `editor@thehumanquestionjournal.com`; the ISSN remains `null`. Albert confirmed successful email delivery on 8 November 2026. Add only the ISSN actually assigned to this journal; checksum validation is not proof of assignment.
 
 `siteUrl` is the active hosting origin. `intendedDomain` records the intended custom domain and does not establish that its DNS is connected. Keep `robotsIndex` false during the pilot. After the custom domain works, set `siteUrl` to that origin before enabling indexing. Search-engine indexing is never guaranteed.
 
@@ -40,7 +40,7 @@ Add an object to `content/articles.json`:
 | `keywords` | Array of keywords; may be empty |
 | `pdf` | `/articles/FILENAME.pdf`, matching the file in `public/articles/` |
 | `publishedDate` | Actual publication date, `YYYY-MM-DD` |
-| `licence` | The agreed `CC-BY-4.0` or `CC-BY-SA-4.0` licence |
+| `licence` | Normally `CC-BY-NC-ND-4.0`; the build also supports `CC-BY-4.0` and `CC-BY-SA-4.0` for explicitly agreed exceptions |
 | `issueSlug` | The slug of an existing issue |
 | `pages` | Published page range or article number |
 | `doi` | Optional assigned DOI beginning `10.`; omit or use `null` if none |

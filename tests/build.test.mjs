@@ -101,3 +101,23 @@ test('failed validation preserves the preceding working distribution', async t =
   await assert.rejects(buildProject(f));
   assert.deepEqual(JSON.parse(await readFile(join(f.rootDir, 'dist/catalogue.json'), 'utf8')).articles, []);
 });
+
+
+test('approved NC-ND rights and confirmed editorial roles survive publication exports', async t => {
+  const f = await fixture(t, true);
+  const name = 'Albert Tan Sin Hon';
+  await writeFile(join(f.rootDir, 'content/journal.json'), JSON.stringify({ ...journal, president: name, editorInChief: name }));
+  await writeFile(join(f.rootDir, 'content/articles.json'), JSON.stringify([{ ...article, licence: 'CC-BY-NC-ND-4.0' }]));
+  const result = await buildProject(f);
+  const licence = 'https://creativecommons.org/licenses/by-nc-nd/4.0/';
+  const catalogue = JSON.parse(await readFile(join(result.outputDirectory, 'catalogue.json'), 'utf8'));
+  assert.equal(catalogue.journal.president, name);
+  assert.equal(catalogue.journal.editorInChief, name);
+  assert.equal(catalogue.articles[0].licenceUrl, licence);
+  const html = await readFile(join(result.outputDirectory, 'articles/human-institutions/index.html'), 'utf8');
+  assert.ok(html.includes(`rel="license" href="${licence}"`));
+  assert.equal(JSON.parse(html.match(/<script type="application\/ld\+json">(.*?)<\/script>/s)[1]).license, licence);
+  const guide = await readFile(join(result.outputDirectory, 'llms.txt'), 'utf8');
+  assert.ok(guide.includes(`President: ${name}`));
+  assert.ok(guide.includes(`Editor-in-Chief: ${name}`));
+});

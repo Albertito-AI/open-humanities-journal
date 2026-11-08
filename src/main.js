@@ -1,7 +1,7 @@
 'use strict';
 
 const $ = (selector) => document.querySelector(selector);
-const views = new Set(['journal', 'authors', 'style', 'archive']);
+const views = new Set(['journal', 'authors', 'style', 'policies', 'archive']);
 let articles = [];
 let submissionEmail = null;
 let catalogueLoaded = false;

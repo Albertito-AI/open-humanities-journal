@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 
 const LICENCES = {
   'CC-BY-4.0': 'https://creativecommons.org/licenses/by/4.0/',
+  'CC-BY-NC-ND-4.0': 'https://creativecommons.org/licenses/by-nc-nd/4.0/',
   'CC-BY-SA-4.0': 'https://creativecommons.org/licenses/by-sa/4.0/',
 };
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -37,6 +38,7 @@ export function validateJournal(input) {
   const journal = {
     title: text(j.title, 'Journal title', 200), subtitle: text(j.subtitle, 'Journal subtitle', 300),
     description: text(j.description, 'Journal description', 5000), founder: text(j.founder, 'Founder', 200),
+    editorInChief: optionalText(j.editorInChief, 'Editor-in-Chief', 200), president: optionalText(j.president, 'President', 200),
     officialWebsite: url(j.officialWebsite, 'Official website'), sourceCode: url(j.sourceCode, 'Source repository'),
     siteUrl: j.siteUrl == null || j.siteUrl === '' ? null : url(j.siteUrl, 'Site URL', true),
     intendedDomain: url(j.intendedDomain, 'Intended domain', true), submissionEmail, issn,
@@ -73,7 +75,7 @@ export async function validateArticle(input, { issues, publicDir }) {
   const bytes = await readFile(localPdf);
   if (!bytes.subarray(0, 5).equals(Buffer.from('%PDF-'))) throw new Error('Referenced file lacks a PDF signature');
   const licence = text(a.licence, 'Article licence', 30);
-  if (!Object.hasOwn(LICENCES, licence)) throw new Error('Article licence must be CC-BY-4.0 or CC-BY-SA-4.0');
+  if (!Object.hasOwn(LICENCES, licence)) throw new Error('Article licence must be CC-BY-4.0, CC-BY-SA-4.0 or CC-BY-NC-ND-4.0');
   const doi = optionalText(a.doi, 'DOI', 300);
   if (doi && !/^10\.\d{4,9}\/[^\s]+$/.test(doi)) throw new Error('DOI must be the assigned identifier beginning 10., not a URL');
   return {
@@ -157,7 +159,7 @@ export async function buildProject({ rootDir = process.cwd() } = {}) {
     }
     await write(staging, 'catalogue.json', JSON.stringify({ journal, issues, articles }, null, 2) + '\n');
     await write(staging, 'journal.json', JSON.stringify(journal, null, 2) + '\n');
-    await write(staging, 'llms.txt', `# ${journal.title}: ${journal.subtitle}\n\n${journal.description}\n\nThis is a static open-access journal site. ${articles.length ? `${articles.length} article(s) are published in the catalogue.` : 'No articles are published here yet; the archive is empty.'}\n\nSubmission method: email. ${journal.submissionEmail ? `Contact: ${journal.submissionEmail}.` : 'The submission mailbox is not configured, so submissions are not yet open.'}\nISSN: ${journal.issn ?? 'not assigned'}.\n\n- [Catalogue](${absolute(journal, '/catalogue.json')}): published metadata, article links and PDF links.\n- [Journal information](${absolute(journal, '/journal.json')})\n- [Portable file manifest](${absolute(journal, '/export-manifest.json')})\n- [Source code](${journal.sourceCode})\n- [Founder’s official website](${journal.officialWebsite})\n\nEach article has a landing page, BibTeX and RIS citations, and Schema.org JSON-LD. Use the article’s actual content and stated licence. This site has no agent write tools, manuscript upload service, MCP server or automated email sending. It makes no claim of automatic indexing or endorsement.\n`);
+    await write(staging, 'llms.txt', `# ${journal.title}: ${journal.subtitle}\n\n${journal.description}\n\nThis is a static open-access journal site. ${articles.length ? `${articles.length} article(s) are published in the catalogue.` : 'No articles are published here yet; the archive is empty.'}\n\nSubmission method: email. ${journal.submissionEmail ? `Contact: ${journal.submissionEmail}.` : 'The submission mailbox is not configured, so submissions are not yet open.'}\nPresident: ${journal.president ?? 'not recorded'}.\nEditor-in-Chief: ${journal.editorInChief ?? 'not recorded'}.\nISSN: ${journal.issn ?? 'not assigned'}.\n\n- [Catalogue](${absolute(journal, '/catalogue.json')}): published metadata, article links and PDF links.\n- [Journal information](${absolute(journal, '/journal.json')})\n- [Portable file manifest](${absolute(journal, '/export-manifest.json')})\n- [Source code](${journal.sourceCode})\n- [President and Editor-in-Chief’s official website](${journal.officialWebsite})\n- [Author instructions](${absolute(journal, '/#authors')})\n- [Approved publication standard](${absolute(journal, '/#style')})\n- [Editorial policies](${absolute(journal, '/#policies')})\n- [Connected research and learning](https://www.alberttansinhon.com/explore/)\n\nEach article has a landing page, BibTeX and RIS citations, and Schema.org JSON-LD. Use the article’s actual content and stated licence. This site has no agent write tools, manuscript upload service, MCP server or automated email sending. It makes no claim of automatic indexing or endorsement.\n`);
     await write(staging, 'robots.txt', `User-agent: *\n${journal.robotsIndex ? 'Allow: /' : 'Disallow: /'}\n${journal.robotsIndex && journal.siteUrl ? `Sitemap: ${journal.siteUrl}/sitemap.xml\n` : ''}`);
     if (journal.siteUrl && journal.robotsIndex) await write(staging, 'sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[journal.siteUrl + '/', ...articles.map(a => a.url)].map(value => `<url><loc>${escapeHtml(value)}</loc></url>`).join('')}</urlset>\n`);
     const files = [];
