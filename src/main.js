@@ -85,8 +85,12 @@ function renderArchive() {
     const date = published && !Number.isNaN(Date.parse(published)) ? new Date(published).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}) : '';
     bottom.append(make('span', '', date));
     const pdf = localPdf(article);
-    if (pdf) { const link = make('a','text-button','Download PDF ↗');link.href=pdf;link.target='_blank';link.rel='noopener noreferrer';bottom.append(link); }
-    else { const link=make('a','text-button','Read article ↗');link.href=`/articles/${slug}/`;bottom.append(link); }
+    if (pdf) {
+      const link = make('a', 'text-button', 'Download PDF');
+      link.href = pdf;
+      link.download = '';
+      bottom.append(link);
+    } else { const link=make('a','text-button','Read article ↗');link.href=`/articles/${slug}/`;bottom.append(link); }
     card.append(bottom);grid.append(card);
   });
   results.append(grid);
