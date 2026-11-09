@@ -108,7 +108,6 @@ def new(title, subtitle, label='Journal guidance', version='1.0', effective_date
     style(d,'Abstract Heading',SANS,11,True,colour=GREEN,after=6,line=13,left=126,align=WD_ALIGN_PARAGRAPH.LEFT,keep=True,caps=True)
     style(d,'Abstract',size=9,after=10,line=11.4,left=126)
     style(d,'Keywords',size=9,after=8,line=10.5,left=126,align=WD_ALIGN_PARAGRAPH.LEFT)
-    style(d,'Bibliography',size=10,after=3,line=11.55,left=21.6,first=-21.6,align=WD_ALIGN_PARAGRAPH.LEFT)
     style(d,'Block Text',left=14,right=14,line=11.4)
     style(d,'Footnote Text',size=9,after=2,line=10.35,left=11,first=-11,align=WD_ALIGN_PARAGRAPH.LEFT)
     style(d,'Small',size=8.5,after=5,line=10.5,align=WD_ALIGN_PARAGRAPH.LEFT)
@@ -165,7 +164,7 @@ def sources(d,items):
 def note(d,text): add(d,text,'Small')
 
 # 1. Publication style guide: fixed page breaks make the specification easy to use.
-d=new('Publication style guide','House style and production specification','House style guide · v1.1', version='1.1', effective_date='9 November 2026')
+d=new('Publication style guide','House style and production specification','House style guide · v1.2', version='1.2', effective_date='9 November 2026')
 intro(d,'Approved by Albert Tan Sin Hon, President and Editor-in-Chief, on 8 November 2026, this guide establishes the journal’s publication production standard. Its visual structure follows the reference supplied by the founder: an offset opening title and abstract, a single text column, compact serif prose, strong sans-serif headings and page footnotes. The full journal logo replaces the large “Open Access” masthead. Deep green replaces the orange headings and rules; rust is reserved for restrained secondary accents. The accompanying PDF specimen illustrates the finished layout. Authors may submit a clearly formatted manuscript before acceptance; the editorial team applies the publication layout during production.')
 h(d,'1. A recognisable journal page')
 add(d,'Use the complete approved logo, including the monogram and journal name. Keep its proportions and colours intact. On the first page, place it at the upper left, with the journal subtitle and document or article type at the upper right. A fine dark rule separates the masthead from the page. Subsequent pages carry a deep green top rule and a short running title with the page number below.')
@@ -192,7 +191,7 @@ table(d,['Element','Setting'],[
 ('Heading 2','Liberation Sans, 10 pt bold italic capitals, deep green; 12 pt exact; 10 pt before, 5 pt after; keep with next.'),
 ('Block Text','Liberation Serif, 9.5 pt; left and right indents 14 pt; no first-line indent; 11.4 pt exact.'),
 ('Footnote Text','Liberation Serif, 9 pt; 10.35 pt exact; 11 pt left and hanging indent; 2 pt after. Superscript reference markers.'),
-('Bibliography','Liberation Serif, 10 pt; left aligned; 21.6 pt hanging indent; 11.55 pt exact; 3 pt after.'),
+('References','Page footnotes only; no terminal reference list or bibliography.'),
 ('Running footer','Short article title, 8 pt grey; page number right aligned. Never type page numbers manually.'),
 ('Colours','Deep green #183E35; rust #BC4B31; near black #141414; secondary grey #696969. White page background.')
 ],[104,382])
@@ -212,19 +211,19 @@ h(d,'3.2 Quotations, numbers and dates',2)
 add(d,'Use single quotation marks, with double marks for a quotation inside a quotation. Set quotations of 40 words or more as indented blocks without quotation marks. Reproduce the source accurately, show omissions and editorial insertions, and give a pinpoint citation. Place punctuation according to its grammatical relationship to the quotation. Do not silently modernise or correct a source.')
 add(d,'Write dates as 8 November 2026. Use numerals for measurements, percentages, tables and precise comparisons; normally spell out one to nine in ordinary prose. Use an en dash for inclusive ranges, such as 12–18. Distinguish the number zero from the letter O and a hyphen from a minus sign. Define units, denominators and statistical measures.','Normal')
 h(d,'3.3 Footnotes and references',2)
-add(d,'The default final style is footnotes with a bibliography. Use Word’s Insert Footnote function with consecutive Arabic numbering throughout the article. Place the superscript marker after punctuation unless the note relates specifically to a word or phrase. Give full bibliographical details at first mention, then an unambiguous short form. Avoid op. cit.; use ibid only when the preceding note identifies a single source unambiguously. Every quotation and contested factual proposition needs a precise source.')
-add(d,'For legal scholarship, follow OSCOLA, fifth edition, with adaptations required by the jurisdiction and this guide’s typography. Preserve official case names, neutral citations, statutory titles and treaty identifiers. Give sections, articles, rules, paragraphs or pages as appropriate. Do not force a non-UK authority into a misleading UK citation. For non-legal humanities work, use the patterns below consistently. An established author-date system may be retained with the handling editor’s agreement where it is necessary for the discipline; one article must not mix systems accidentally.','Normal')
+add(d,'The final style uses page footnotes only. Do not append a References section, bibliography or other reference list after the conclusion. Use Word’s Insert Footnote function, with consecutive Arabic numbering throughout the article. Each note must appear at the foot of the page containing its marker. Place the superscript after punctuation unless it relates specifically to a word or phrase. The published article ends with its conclusion.')
+add(d,'Give full identifying details at first mention. Later citations use the author, a short title and the earlier note number, with the current pinpoint. Preserve stable URLs or digital object identifiers. Legal papers follow OSCOLA, fifth edition, with jurisdictional adaptations; retain official case names, neutral citations, statutory titles and treaty identifiers. Use the same footnote system for all disciplines. Convert author-date citations before publication, and check every quotation and contested factual proposition against its precise source.','Normal')
 table(d,['Source','Footnote pattern (placeholders, not actual references)'],[
 ('Book','Author Full Name, Book Title (edition, Publisher year) pinpoint.'),
 ('Journal article','Author Full Name, ‘Article Title’ (year) volume Journal Title first page, pinpoint. DOI where available.'),
 ('Book chapter','Author Full Name, ‘Chapter Title’ in Editor Name (ed), Book Title (Publisher year) pinpoint.'),
 ('Online source','Author or organisation, ‘Page Title’ (publication or update date) stable URL; add an access date when undated or liable to change.'),
-('Bibliography','Invert the first author’s name; arrange alphabetically. Omit the specific cited pinpoint. Retain article/chapter page ranges.')
+('Repeat citation','Author, Short Title (n [earlier note number]) pinpoint. Preserve the source’s stable URL or DOI where needed.')
 ],[92,394])
 page(d)
 h(d,'4. Production, accessibility and release')
 add(d,'Number tables and figures separately, cite each in the text, and provide a concise title, explanatory notes, source and permissions statement where required. Use editable tables rather than images of tables. Supply charts and line drawings in vector form where practical; otherwise use an image resolution appropriate to its final size. Keep labels legible at publication scale. Provide useful alternative text describing what a reader needs to learn from each visual. Colour alone must not carry meaning.')
-add(d,'Place acknowledgements, funding, competing interests, author contributions where applicable, research ethics or consent, data availability and substantive artificial-intelligence assistance declarations before the bibliography. State when a category does not apply. These declarations must describe the work actually done. Human authors remain responsible for all analysis, quotations, citations, translations and visual material.','Normal')
+add(d,'Place acknowledgements, funding, competing interests, author contributions where applicable, research ethics or consent, data availability and substantive artificial-intelligence assistance declarations before the conclusion. State when a category does not apply. These declarations must describe the work actually done. Human authors remain responsible for all analysis, quotations, citations, translations and visual material.','Normal')
 h(d,'4.1 Copyright and the publication record',2)
 add(d,'The standard article notice is: “© [year] [author name(s)]. Published by The Human Question: A Journal of Humanistic Inquiry. Licensed under Creative Commons Attribution–NonCommercial–NoDerivatives 4.0 International (CC BY-NC-ND 4.0).” Add the licence link below. Replace all brackets with verified details before release. Identify any excluded third-party material separately. A licence notice must reflect the signed author agreement and actual rights held.')
 note(d,LICENCE)
@@ -265,17 +264,14 @@ h(d,'2. Analysis')
 add(d,'[Continue the argument. Add sections and subsections as needed. This page demonstrates the subsequent-page header and footer.]')
 table(d,['Table 1. [Descriptive title]','[Column heading]'],[('[Row label]','[Verified value or explanation]'),('[Row label]','[Verified value or explanation]')],[225,261])
 note(d,'Source: [source and permission or licence where required]. Notes: [definitions, units and qualifications].')
-h(d,'3. Conclusion')
-add(d,'[Explain what follows from the analysis, including its limits. Do not introduce unsupported claims.]')
 h(d,'Declarations')
 for title,text in [('Funding','[Name the funder and grant, or state that no specific funding supported the work.]'),('Competing interests','[Disclose relevant interests, or state “None declared”.]'),('Author contributions','[Describe contributions where there is more than one author.]'),('Ethics and consent','[Approval or exemption and consent arrangements, or explain why not applicable.]'),('Data and materials','[Repository and access terms, a justified restriction, or “No new dataset was created”.]'),('Artificial-intelligence assistance','[Identify tools and their material uses, verification and responsibility, or state that no substantive generative assistance was used.]')]:
     p=add(d); p.add_run(title+': ').bold=True; p.add_run(text)
-h(d,'Bibliography')
-add(d,'[Surname, Given Name], [Book Title] ([Publisher] [year])','Bibliography')
-add(d,'[Surname, Given Name], ‘[Article Title]’ ([year]) [volume] [Journal] [page range]','Bibliography')
 h(d,'Publication notice')
 note(d,'© [year] [author name(s)]. Published by The Human Question: A Journal of Humanistic Inquiry. Licensed under Creative Commons Attribution–NonCommercial–NoDerivatives 4.0 International (CC BY-NC-ND 4.0). '+LICENCE)
 note(d,'[Production editor: remove every bracketed instruction, confirm all rights and identifiers, and secure author approval before publication.]')
+h(d,'3. Conclusion')
+add(d,'[Explain what follows from the analysis, including its limits. Do not introduce unsupported claims. The article ends here; keep all cited references in page footnotes and do not append a reference list or bibliography.]')
 footnotes=el('footnotes')
 for fid,kind in [(-1,'separator'),(0,'continuationSeparator')]:
     f=el('footnote',id=fid,type=kind); p=el('p'); r=el('r'); r.append(el(kind)); p.append(r); f.append(p); footnotes.append(f)
@@ -289,7 +285,7 @@ d.part.relate_to(part,RT.FOOTNOTES)
 save(d,'House_Style_Template')
 
 # 3. Author instructions.
-d=new('Author instructions','Preparing and submitting your manuscript')
+d=new('Author instructions','Preparing and submitting your manuscript', version='1.1', effective_date='9 November 2026')
 intro(d,'The Human Question welcomes work that connects serious scholarship with the conditions of human life. Across law, science, politics, technology and culture, the journal asks what ideas, institutions and discoveries mean for the person and for humanity. Submissions and editorial correspondence take place by email. Readers and authors pay no journal fees. Research articles undergo independent external peer review before acceptance.')
 h(d,'1. Scope and article types')
 table(d,['Type','Normal length and review'],[
@@ -297,7 +293,7 @@ table(d,['Type','Normal length and review'],[
 ('Review essay / critical essay','3,000–6,000 words; sustained scholarly analysis; two independent external reviews.'),
 ('Book review / editorial / commentary','1,000–2,500 words; editorial assessment; labelled by type. External review, if used, is disclosed on the article.')
 ],[145,341])
-add(d,'Word limits include footnotes and exclude the abstract and bibliography. Explain any justified departure in the covering email. Interdisciplinary submissions should make their methods and contribution intelligible to readers outside the author’s field. Submissions are considered on a rolling basis; acceptance is never guaranteed. The first issue is in preparation, and no fixed publication frequency is promised at this stage.')
+add(d,'Word limits include footnotes and exclude the abstract. Explain any justified departure in the covering email. Interdisciplinary submissions should make their methods and contribution intelligible to readers outside the author’s field. Submissions are considered on a rolling basis; acceptance is never guaranteed. The first issue is in preparation, and no fixed publication frequency is promised at this stage.')
 h(d,'2. Submit three items by email')
 for title,text in [('An anonymised manuscript','Send an editable Word document; include a PDF where complex layout or scripts need comparison. Remove names, affiliations, acknowledgements and identifying document properties from the review copy. Refer to your own published work in the third person without concealing sources needed to assess the argument.'),('A separate title page','Give the title, article type, word count, all author names and affiliations, corresponding author’s email and ORCID identifiers where available. Include funding, competing interests, contributions, ethics/consent, data availability and substantive artificial-intelligence assistance declarations.'),('A covering email','Explain the contribution and fit; confirm all authors approve submission, the work is not under consideration by another journal, and any preprint, thesis, related paper or earlier version is disclosed. Mention permissions and any confidential concern relevant to review.')]:
     p=add(d); p.add_run(title+'. ').bold=True; p.add_run(text)
@@ -305,7 +301,7 @@ note(d,'Send to '+EMAIL+'. Suggested subject: “Submission | [article type] | [
 page(d)
 h(d,'3. Manuscript preparation')
 add(d,'Initial submissions may use any clear and consistent scholarly format. Provide a title, a 150–250-word abstract without abbreviations, citations or footnotes, four to six keywords, informative headings and complete references. Use British English. Number pages. Figures and tables need captions, sources, necessary permissions and descriptive alternative text. Identify the relevant legal or evidential cut-off date where it affects the analysis.')
-add(d,'The final default is footnotes and bibliography. Legal papers follow OSCOLA, fifth edition; other humanities papers follow the journal’s notes-and-bibliography patterns. Discuss any discipline-specific author-date requirement with the editor. The Publication Style Guide and PDF house-style specimen set the final typography. Do not insert a journal logo into the anonymised review copy.','Normal')
+add(d,'Use page footnotes only; end articles with the conclusion, without a reference list or bibliography. Give full details at first mention, then author, short title, earlier note number and pinpoint. Preserve URLs and digital object identifiers. Apply OSCOLA, fifth edition, to legal sources and convert author-date citations before publication. Follow the Publication Style Guide and keep review copies anonymous.','Normal')
 h(d,'4. Editorial assessment and review')
 add(d,'The editor checks scope, scholarly contribution, completeness, integrity and readiness for review. A desk rejection includes a brief reason. Suitable research and review essays receive double-anonymous review by two independent specialists. Author and reviewer identities are withheld from each other where practicable; public preprints or distinctive research may make identification possible. The handling editor knows the identities and manages conflicts.')
 add(d,'The journal aims to acknowledge a submission within seven days, provide an initial assessment within four weeks and seek external reports within six to eight weeks of reviewer acceptance. These are service targets, not guarantees. The editor will explain material delays. Decisions may request minor or major revision, invite a fresh submission, accept or reject. Reviewer recommendations inform an independent editorial decision.','Normal')
@@ -316,7 +312,7 @@ add(d,'Accepted authors complete the publication agreement, resolve permissions,
 h(d,'6. Fees, rights and queries')
 add(d,'There are no submission, peer-review, publication, page, colour or withdrawal fees. Authors retain copyright. The standard published article licence is CC BY-NC-ND 4.0: readers may share the unadapted work noncommercially with attribution and the licence link. Permission for uses beyond the licence must be obtained from the relevant rights holder unless a legal exception applies. See the rights policy for detail.')
 add(d,'Disclose substantive generative assistance, including drafting, rewriting, translation, coding or image generation. Identify the tool and version where available, the purpose and the human checks. Routine non-generative spelling and reference-format checks need no separate declaration. Artificial-intelligence systems cannot be authors. Do not upload confidential third-party material without authority.')
-note(d,'For submissions, accessibility needs, conflicts, complaints or correction requests: '+EMAIL+'. The accompanying editorial, ethics, rights and privacy policies form part of these instructions. Version 1.0 takes effect on '+DATE+'.')
+note(d,'For submissions, accessibility needs, conflicts, complaints or correction requests: '+EMAIL+'. The accompanying editorial, ethics, rights and privacy policies form part of these instructions. Version 1.1 takes effect on 9 November 2026.')
 save(d,'Author_Instructions')
 
 # 4. Editorial and peer-review policy.
@@ -447,3 +443,4 @@ table(d,['Confirmation','Complete and return to the editor'],[('All author / rig
 add(d,'Return the completed form and any permission evidence to '+EMAIL+'. Keep a copy. A disputed or incomplete permission must be resolved before release; the editor must not sign for the author. No general indemnity, copyright transfer or fee obligation is created by this template.')
 note(d,'Related documents: Author Instructions; Editorial and Peer-Review Policy; Publication Ethics Policy; Access, Rights and Privacy Policy; Publication Style Guide. Version 1.0, '+DATE+'.')
 save(d,'Author_Declaration_and_Publication_Agreement')
+
