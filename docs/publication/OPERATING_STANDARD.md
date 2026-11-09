@@ -1,6 +1,6 @@
 # The Human Question: publication operating standard
 
-**Version 1.0 | Effective 8 November 2026**
+**Version 1.1 | Effective 9 November 2026**
 
 **Albert Tan Sin Hon, President and Editor-in-Chief**  
 The Human Question: A Journal of Humanistic Inquiry  
@@ -13,6 +13,14 @@ Albert approved the house-style sample on 8 November 2026 and instructed that it
 The [publication style guide](../../public/resources/The_Human_Question_Publication_Style_Guide.pdf) specifies typography, layout, references, declarations and final checks. Use the [PDF house-style specimen](../../public/resources/The_Human_Question_House_Style_Template.pdf) for accepted articles. The specimen is instructional and has no publication status.
 
 The [editorial handbook](../../public/resources/The_Human_Question_Editorial_Handbook.pdf) combines the style guide, specimen, author instructions, editorial and peer-review policy, publication ethics, access/rights/privacy policy, reviewer guide and blank author declaration/agreement. Individual PDFs are available at [Policies](https://thehumanquestionjournal.com/#policies) and [House style](https://thehumanquestionjournal.com/#style).
+
+## First-page article licence notice
+
+Effective 9 November 2026, every article must carry the copyright and CC BY-NC-ND 4.0 notice on its first page only. Use the full line below, replacing the year and author fields with verified details:
+
+> © [year] [author name(s)]. Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International licence. To view a copy, visit https://creativecommons.org/licenses/by-nc-nd/4.0/.
+
+On A4, set the baseline 18 pt from the left edge and start the line 55 pt above the bottom edge. Rotate 90 degrees anticlockwise, reading bottom to top. Use Liberation Serif 6.5 pt in #707070; the line must fit within 720 pt and remain clear of the logo, article text and footnotes. Link the entire line to the licence URL with an x = 11–21 pt click area spanning its length. Do not repeat it on subsequent pages. Inspect the export and test the link. Section 2.1 of Publication Style Guide v1.1 records this rule.
 
 ## Publication workflow
 
