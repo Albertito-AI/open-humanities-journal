@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, writeFile, readFile, rm, symlink } from 'node:fs/promises';
+import { mkdtemp, mkdir, writeFile, readFile, rm, symlink, access } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
@@ -151,4 +151,48 @@ test('deployment includes strict browser headers and public document rules', asy
     await assert.rejects(buildProject(f), /Unsupported public asset extension/);
     await rm(join(f.publicDir, name));
   }
+});
+
+test('the call for papers is a complete static page with the deployed origin and discovery links', async t => {
+  const f = await fixture(t);
+  const template = await readFile(new URL('../src/call-for-papers.html', import.meta.url), 'utf8');
+  await writeFile(join(f.rootDir, 'src/call-for-papers.html'), template);
+  await writeFile(join(f.rootDir, 'content/journal.json'), JSON.stringify({ ...journal, siteUrl: journal.intendedDomain, robotsIndex: true }));
+  const result = await buildProject(f);
+  const html = await readFile(join(result.outputDirectory, 'call-for-papers/index.html'), 'utf8');
+  const url = `${journal.intendedDomain}/call-for-papers/`;
+  assert.ok(html.includes(`<link rel="canonical" href="${url}">`));
+  assert.ok(html.includes(`<meta property="og:url" content="${url}">`));
+  assert.ok(html.includes(`${journal.intendedDomain}/brand/The_Human_Question_Logo.png`));
+  assert.doesNotMatch(html, /\{\{|<script\b|noindex|\sstyle=/);
+  assert.match(html, /<h1\b[^>]*>Call for <em>papers<\/em><\/h1>/);
+  const stylesheet = html.match(/href="\/(styles\.[a-f0-9]{12}\.css)"/)[1];
+  assert.equal(await readFile(join(result.outputDirectory, stylesheet), 'utf8'), 'body{font-family:serif}');
+  assert.ok((await readFile(join(result.outputDirectory, 'sitemap.xml'), 'utf8')).includes(`<loc>${url}</loc>`));
+  assert.ok((await readFile(join(result.outputDirectory, 'llms.txt'), 'utf8')).includes(`[Call for papers](${url})`));
+  const manifest = JSON.parse(await readFile(join(result.outputDirectory, 'export-manifest.json'), 'utf8'));
+  assert.ok(manifest.files.some(file => file.path === 'call-for-papers/index.html'));
+
+  await writeFile(join(f.rootDir, 'content/journal.json'), JSON.stringify(journal));
+  await buildProject(f);
+  const preview = await readFile(join(result.outputDirectory, 'call-for-papers/index.html'), 'utf8');
+  assert.match(preview, /<meta name="robots" content="noindex, nofollow">/);
+  assert.ok(preview.includes(`${journal.siteUrl}/call-for-papers/`));
+  assert.ok(!preview.includes(`${journal.intendedDomain}/call-for-papers/`));
+});
+
+test('the call for papers links to existing author resources and retains homepage hash views', async () => {
+  const home = await readFile(new URL('../src/index.html', import.meta.url), 'utf8');
+  const cfp = await readFile(new URL('../src/call-for-papers.html', import.meta.url), 'utf8');
+  assert.ok((home.match(/href="\/call-for-papers\/"/g) ?? []).length >= 3);
+  for (const match of cfp.matchAll(/(?:href|src)="(\/[^\"]*)"/g)) {
+    const path = match[1];
+    if (path === '/' || path === '/call-for-papers/' || path === '/styles.css') continue;
+    if (path.startsWith('/#')) {
+      assert.ok(home.includes(`id="${path.slice(2)}" data-view="${path.slice(2)}"`), `Existing hash view: ${path}`);
+    } else {
+      await access(new URL(`../public${path}`, import.meta.url));
+    }
+  }
+  assert.ok(cfp.includes('mailto:editor@thehumanquestionjournal.com'));
 });
