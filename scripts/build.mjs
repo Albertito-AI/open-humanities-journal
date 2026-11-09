@@ -144,21 +144,33 @@ export async function buildProject({ rootDir = process.cwd() } = {}) {
   const publishedPdfs = new Set(articles.map(article => article.pdf.slice(1)));
   for (const asset of assets) if (asset.path.startsWith('articles/') && !publishedPdfs.has(asset.path)) throw new Error(`Unreferenced file under public/articles would be exposed: ${asset.path}`);
   const sources = Object.fromEntries(await Promise.all(['index.html', 'styles.css', 'main.js'].map(async name => [name, await readFile(join(root, 'src', name))])));
-  const reserved = new Set(['index.html', 'styles.css', 'main.js', 'catalogue.json', 'journal.json', 'llms.txt', 'robots.txt', 'sitemap.xml', 'export-manifest.json', '_headers']);
+  const cfpSource = await readFile(join(root, 'src/call-for-papers.html'), 'utf8').catch(error => {
+    if (error.code === 'ENOENT') return null;
+    throw error;
+  });
+  const reserved = new Set(['call-for-papers/index.html', 'index.html', 'styles.css', 'main.js', 'catalogue.json', 'journal.json', 'llms.txt', 'robots.txt', 'sitemap.xml', 'export-manifest.json', '_headers']);
   for (const asset of assets) if (reserved.has(asset.path) || /^(?:styles|main)\.[a-f0-9]{12}\.(?:css|js)$/.test(asset.path) || articles.some(a => asset.path === `articles/${a.slug}/index.html` || asset.path === `articles/${a.slug}.json` || asset.path === `articles/${a.slug}.ris` || asset.path === `articles/${a.slug}.bib`)) throw new Error(`Public asset conflicts with a generated file: ${asset.path}`);
   const staging = await mkdtemp(join(root, '.static-build-'));
   try {
     // Version browser assets by their bytes so an earlier cached script cannot
     // leave newly published navigation routes inaccessible.
     let homeHtml = sources['index.html'].toString('utf8');
+    let cfpHtml = cfpSource;
+    if (cfpHtml !== null) {
+      const cfpUrl = escapeHtml(absolute(journal, '/call-for-papers/'));
+      const metadata = (journal.siteUrl ? `<link rel="canonical" href="${cfpUrl}">\n  <meta property="og:url" content="${cfpUrl}">` : '') + (journal.robotsIndex ? '' : '\n  <meta name="robots" content="noindex, nofollow">');
+      cfpHtml = cfpHtml.replaceAll('{{PAGE_METADATA}}', metadata).replaceAll('{{LOGO_URL}}', escapeHtml(absolute(journal, '/brand/The_Human_Question_Logo.png')));
+    }
     for (const name of ['styles.css', 'main.js']) {
       const digest = createHash('sha256').update(sources[name]).digest('hex').slice(0, 12);
       const versioned = name.replace('.', `.${digest}.`);
       homeHtml = homeHtml.replaceAll(`"/${name}"`, `"/${versioned}"`);
+      if (cfpHtml !== null) cfpHtml = cfpHtml.replaceAll(`"/${name}"`, `"/${versioned}"`);
       await write(staging, versioned, sources[name]);
       await write(staging, name, sources[name]);
     }
     await write(staging, 'index.html', homeHtml);
+    if (cfpHtml !== null) await write(staging, 'call-for-papers/index.html', cfpHtml);
     for (const asset of assets) await write(staging, asset.path, await readFile(asset.source));
     for (const article of articles) {
       const issue = issues.find(i => i.slug === article.issueSlug);
@@ -169,9 +181,9 @@ export async function buildProject({ rootDir = process.cwd() } = {}) {
     }
     await write(staging, 'catalogue.json', JSON.stringify({ journal, issues, articles }, null, 2) + '\n');
     await write(staging, 'journal.json', JSON.stringify(journal, null, 2) + '\n');
-    await write(staging, 'llms.txt', `# ${journal.title}: ${journal.subtitle}\n\n${journal.description}\n\nThis is a static open-access journal site. ${articles.length ? `${articles.length} article(s) are published in the catalogue.` : 'No articles are published here yet; the archive is empty.'}\n\nSubmission method: email. ${journal.submissionEmail ? `Contact: ${journal.submissionEmail}.` : 'The submission mailbox is not configured, so submissions are not yet open.'}\nPresident: ${journal.president ?? 'not recorded'}.\nEditor-in-Chief: ${journal.editorInChief ?? 'not recorded'}.\nISSN: ${journal.issn ?? 'not assigned'}.\n\n- [Catalogue](${absolute(journal, '/catalogue.json')}): published metadata, article links and PDF links.\n- [Journal information](${absolute(journal, '/journal.json')})\n- [Portable file manifest](${absolute(journal, '/export-manifest.json')})\n- [Source code](${journal.sourceCode})\n- [President and Editor-in-Chief’s official website](${journal.officialWebsite})\n- [Author instructions](${absolute(journal, '/#authors')})\n- [Approved publication standard](${absolute(journal, '/#style')})\n- [Editorial policies](${absolute(journal, '/#policies')})\n- [Connected research and learning](https://www.alberttansinhon.com/explore/)\n\nEach article has a landing page, BibTeX and RIS citations, and Schema.org JSON-LD. Use the article’s actual content and stated licence. This site has no agent write tools, manuscript upload service, MCP server or automated email sending. It makes no claim of automatic indexing or endorsement.\n`);
+    await write(staging, 'llms.txt', `# ${journal.title}: ${journal.subtitle}\n\n${journal.description}\n\nThis is a static open-access journal site. ${articles.length ? `${articles.length} article(s) are published in the catalogue.` : 'No articles are published here yet; the archive is empty.'}\n\nSubmission method: email. ${journal.submissionEmail ? `Contact: ${journal.submissionEmail}.` : 'The submission mailbox is not configured, so submissions are not yet open.'}\nPresident: ${journal.president ?? 'not recorded'}.\nEditor-in-Chief: ${journal.editorInChief ?? 'not recorded'}.\nISSN: ${journal.issn ?? 'not assigned'}.\n\n- [Catalogue](${absolute(journal, '/catalogue.json')}): published metadata, article links and PDF links.\n- [Journal information](${absolute(journal, '/journal.json')})\n- [Portable file manifest](${absolute(journal, '/export-manifest.json')})\n- [Source code](${journal.sourceCode})\n- [President and Editor-in-Chief’s official website](${journal.officialWebsite})\n${cfpSource !== null ? `- [Call for papers](${absolute(journal, '/call-for-papers/')}): founding issue, scope, contribution types and rolling submissions.\n` : ''}- [Author instructions](${absolute(journal, '/#authors')})\n- [Approved publication standard](${absolute(journal, '/#style')})\n- [Editorial policies](${absolute(journal, '/#policies')})\n- [Connected research and learning](https://www.alberttansinhon.com/explore/)\n\nEach article has a landing page, BibTeX and RIS citations, and Schema.org JSON-LD. Use the article’s actual content and stated licence. This site has no agent write tools, manuscript upload service, MCP server or automated email sending. It makes no claim of automatic indexing or endorsement.\n`);
     await write(staging, 'robots.txt', `User-agent: *\n${journal.robotsIndex ? 'Allow: /' : 'Disallow: /'}\n${journal.robotsIndex && journal.siteUrl ? `Sitemap: ${journal.siteUrl}/sitemap.xml\n` : ''}`);
-    if (journal.siteUrl && journal.robotsIndex) await write(staging, 'sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[journal.siteUrl + '/', ...articles.map(a => a.url)].map(value => `<url><loc>${escapeHtml(value)}</loc></url>`).join('')}</urlset>\n`);
+    if (journal.siteUrl && journal.robotsIndex) await write(staging, 'sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[journal.siteUrl + '/', ...(cfpSource !== null ? [absolute(journal, '/call-for-papers/')] : []), ...articles.map(a => a.url)].map(value => `<url><loc>${escapeHtml(value)}</loc></url>`).join('')}</urlset>\n`);
     await write(staging, '_headers', `/*
   Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'none'; object-src 'none'; form-action 'none'; frame-ancestors 'none'; frame-src 'none'; worker-src 'none'; upgrade-insecure-requests
   X-Content-Type-Options: nosniff
