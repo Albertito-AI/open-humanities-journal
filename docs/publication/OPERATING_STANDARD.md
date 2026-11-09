@@ -1,6 +1,6 @@
 # The Human Question: publication operating standard
 
-**Version 1.1 | Effective 9 November 2026**
+**Version 1.2 | Effective 9 November 2026**
 
 **Albert Tan Sin Hon, President and Editor-in-Chief**  
 The Human Question: A Journal of Humanistic Inquiry  
@@ -20,7 +20,15 @@ Effective 9 November 2026, every article must carry the copyright and CC BY-NC-N
 
 > © [year] [author name(s)]. Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International licence. To view a copy, visit https://creativecommons.org/licenses/by-nc-nd/4.0/.
 
-On A4, set the baseline 18 pt from the left edge and start the line 55 pt above the bottom edge. Rotate 90 degrees anticlockwise, reading bottom to top. Use Liberation Serif 6.5 pt in #707070; the line must fit within 720 pt and remain clear of the logo, article text and footnotes. Link the entire line to the licence URL with an x = 11–21 pt click area spanning its length. Do not repeat it on subsequent pages. Inspect the export and test the link. Section 2.1 of Publication Style Guide v1.1 records this rule.
+On A4, set the baseline 18 pt from the left edge and start the line 55 pt above the bottom edge. Rotate 90 degrees anticlockwise, reading bottom to top. Use Liberation Serif 6.5 pt in #707070; the line must fit within 720 pt and remain clear of the logo, article text and footnotes. Link the entire line to the licence URL with an x = 11–21 pt click area spanning its length. Do not repeat it on subsequent pages. Inspect the export and test the link. Section 2.1 of Publication Style Guide v1.2 records this rule.
+
+## Footnote-only citations and article endings
+
+Effective 9 November 2026, every published article uses true page footnotes for all cited references, with consecutive Arabic numbering. Each note appears at the foot of the page containing its marker. Give full identifying citation details at the first mention of a source. Later citations use the author, a short title and the earlier note number, together with the current pinpoint. Preserve precise page, paragraph, section or article references and stable URLs or digital object identifiers.
+
+Apply this system across all disciplines. Convert author-date citations before publication. Legal sources follow OSCOLA, fifth edition, with the jurisdictional adaptations specified in the style guide. Before removing an existing reference list, transfer all identifying details needed by the cited sources into their first full footnotes and verify every note cross-reference.
+
+Articles end with their conclusion. Do not append a References section, bibliography or other reference list. Place required declarations and publication notices before the conclusion. Section 3.3 of Publication Style Guide v1.2 and Author Instructions v1.1 record this rule.
 
 ## Publication workflow
 
@@ -41,3 +49,4 @@ The current journal has no published articles or assigned ISSN. Do not add ident
 ## Maintainer checks
 
 Rebuild temporary production masters outside the public directory with `python docs/publication/build_publication_documents.py` in an environment with python-docx and the documented fonts. Render and inspect every page before replacing PDFs. The combined handbook must reproduce those final PDFs and retain navigable section bookmarks. The generator does not itself approve text or execute agreements.
+
