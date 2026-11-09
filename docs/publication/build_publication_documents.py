@@ -91,7 +91,7 @@ def table(d, heads, rows, widths):
     add(d,'','Small')
     return t
 
-def new(title, subtitle, label='Journal guidance'):
+def new(title, subtitle, label='Journal guidance', version='1.0', effective_date=DATE):
     d=Document(); s=d.sections[0]
     s.page_width=Pt(595.3); s.page_height=Pt(841.9)
     s.top_margin=Pt(40); s.bottom_margin=Pt(44); s.left_margin=Pt(59.15); s.right_margin=Pt(49.35)
@@ -143,12 +143,12 @@ def new(title, subtitle, label='Journal guidance'):
     d.core_properties.title='The Human Question | '+title
     d.core_properties.subject=subtitle
     d.core_properties.author='The Human Question'
-    d.core_properties.keywords='journal, author guidance, version 1.0'
-    d.core_properties.comments='Original journal guidance. Version 1.0, 8 November 2026.'
+    d.core_properties.keywords='journal, author guidance, version '+version
+    d.core_properties.comments='Original journal guidance. Version '+version+', '+effective_date+'.'
     add(d,title,'Title'); add(d,subtitle,'Subtitle')
     add(d,'The Human Question','Author')
     add(d,'A Journal of Humanistic Inquiry','Affiliation')
-    add(d,'Version 1.0 · '+DATE,'Date')
+    add(d,'Version '+version+' · '+effective_date,'Date')
     return d
 
 def intro(d,text):
@@ -165,7 +165,7 @@ def sources(d,items):
 def note(d,text): add(d,text,'Small')
 
 # 1. Publication style guide: fixed page breaks make the specification easy to use.
-d=new('Publication style guide','House style and production specification','House style guide · v1.0')
+d=new('Publication style guide','House style and production specification','House style guide · v1.1', version='1.1', effective_date='9 November 2026')
 intro(d,'Approved by Albert Tan Sin Hon, President and Editor-in-Chief, on 8 November 2026, this guide establishes the journal’s publication production standard. Its visual structure follows the reference supplied by the founder: an offset opening title and abstract, a single text column, compact serif prose, strong sans-serif headings and page footnotes. The full journal logo replaces the large “Open Access” masthead. Deep green replaces the orange headings and rules; rust is reserved for restrained secondary accents. The accompanying PDF specimen illustrates the finished layout. Authors may submit a clearly formatted manuscript before acceptance; the editorial team applies the publication layout during production.')
 h(d,'1. A recognisable journal page')
 add(d,'Use the complete approved logo, including the monogram and journal name. Keep its proportions and colours intact. On the first page, place it at the upper left, with the journal subtitle and document or article type at the upper right. A fine dark rule separates the masthead from the page. Subsequent pages carry a deep green top rule and a short running title with the page number below.')
@@ -197,6 +197,11 @@ table(d,['Element','Setting'],[
 ('Colours','Deep green #183E35; rust #BC4B31; near black #141414; secondary grey #696969. White page background.')
 ],[104,382])
 note(d,'Use the named Word styles. Do not create alignment with repeated spaces or empty paragraphs. Enable widow/orphan control. Keep headings with the following paragraph. In passages with complex mathematics or scripts, increase line spacing locally if glyphs would be clipped, and inspect the exported PDF.')
+h(d,'2.1 First-page vertical licence line',2)
+add(d,"Every article must carry a vertical copyright and licence notice on its first page only. Place it in the outer left margin of the A4 page, with the baseline 18 pt from the left edge and the text starting 55 pt above the bottom edge. Rotate it 90 degrees anticlockwise so that it reads from bottom to top.")
+add(d,"Use Liberation Serif, 6.5 pt, in muted grey #707070. Keep the full line within 720 pt and clear of the logo, article text and footnotes. Link the entire line to https://creativecommons.org/licenses/by-nc-nd/4.0/; the link area should span x = 11–21 pt and the length of the notice. Do not repeat the notice on subsequent pages.")
+add(d,"Text: © [year] [author name(s)]. Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International licence. To view a copy, visit https://creativecommons.org/licenses/by-nc-nd/4.0/.")
+add(d,"Replace the bracketed fields with the article’s verified year and author names. Inspect the rotated text and test its link in the exported PDF. This layout requirement takes effect on 9 November 2026.")
 page(d)
 h(d,'3. Language, structure and citation')
 h(d,'3.1 Titles, abstracts and prose',2)
