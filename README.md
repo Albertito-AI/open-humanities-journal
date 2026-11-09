@@ -60,6 +60,8 @@ Development is directed by Albert Tan with assistance from coding agents. Human 
 
 [Albert’s resource guide](https://www.alberttansinhon.com/explore/) connects the journal with his open-access book, teaching companion, research catalogue and creative work. [GitHub profile](https://github.com/Albertito-AI) · [Open learning](https://www.alberttansinhon.com/ibol/) · [Listen and learn](https://www.alberttansinhon.com/listen-and-learn/). Journal submissions go to the editorial address; professional enquiries go through Albert’s personal website. Commercial engagements do not confer publication preference.
 
+[Atlas Open Mathematics](https://github.com/Albertito-AI/atlas-open-mathematics) is an experimental public research and teaching project. Selected work may be submitted through the journal’s ordinary review process. The [research-to-publication guide](docs/ATLAS_RESEARCH_BRIDGE.md) explains evidence versions, human responsibility, independent review and teaching rights. Repository activity does not create a submission, acceptance or published journal article.
+
 ## Security checks
 
 See [SECURITY.md](SECURITY.md) and the [maintenance runbook](docs/SECURITY_RUNBOOK.md). Public journal documents are PDF-only. CI inspects PDFs and SVGs for active content, tests hostile inputs, and builds the site with strict Cloudflare response headers. Dependency proposals require review. Incoming manuscripts and review records remain private and are never uploaded to this public repository.
