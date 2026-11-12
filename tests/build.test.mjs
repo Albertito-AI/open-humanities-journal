@@ -22,7 +22,7 @@ test('issue publication preserves absent volume and verified ORCID in readable c
   await writeFile(join(f.rootDir, 'content/articles.json'), JSON.stringify([{ ...article, orcids: ['0009-0001-8996-7933'] }]));
   const result = await buildProject(f);
   const html = await readFile(join(result.outputDirectory, 'articles/human-institutions/index.html'), 'utf8');
-  assert.ok(html.includes('https://orcid.org/0009-0001-8996-7933'));
+  assert.equal(html.match(/<a class="author-orcid" href="([^"]+)"/)[1], 'https://orcid.org/0009-0001-8996-7933');
   assert.equal(html.includes('citation_volume'), false);
   assert.equal(html.includes('citation_doi'), false);
   assert.equal(html.includes('citation_issn'), false);
