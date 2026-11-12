@@ -10,8 +10,9 @@
   "submissionEmail": "editor@thehumanquestionjournal.com",
   "issn": null,
   "language": "en-GB",
-  "stage": "pilot",
+  "stage": "published",
   "robotsIndex": true,
   "editorInChief": "Albert Tan Sin Hon",
-  "president": "Albert Tan Sin Hon"
+  "president": "Albert Tan Sin Hon",
+  "publisher": "The Human Question Project"
 }

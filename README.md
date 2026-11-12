@@ -12,13 +12,29 @@ This is a small, portable static website: journal information, submission instru
 
 The journal's process takes place by email: **submission → desk decision → peer review → revision → final house-style PDF → publication**. Authors and reviewers do not need website accounts or ChatGPT accounts. Human editors arrange review and make decisions.
 
+## The founding issue is available
+
+**[Read 2026, Number 1 on the journal website](https://thehumanquestionjournal.com/issues/2026-number-1/)** · [Complete issue PDF](https://thehumanquestionjournal.com/issues/2026-number-1/THQ_2026_Number_1_Complete_Issue.pdf)
+
+Published **9 November 2026** by **The Human Question Project**, the first issue contains five articles:
+
+| Author | Article | Pages |
+| --- | --- | --- |
+| Ong Shuyin | When an Estimate Becomes a Warranty: Climate Data and Revision Risk under the CISG | 1–14 |
+| Izhar Ahmed | Equal Standing and the Justification of Social Power | 15–24 |
+| Albert Tan Sin Hon | Authority to Settle: Public Law and the Enforceability of Investor-State Mediated Settlements | 25–36 |
+| Terence Chia Qi Han | Insurance Underwriting and Social Protection in ASEAN | 37–47 |
+| Panupong Chalermsin | Teaching and Assessing Legal Reasoning with Generative AI in Thai Universities | 48–58 |
+
+The journal website is the canonical reading and sharing destination. Each article has an abstract, PDF, verified author ORCID where available, and citation downloads. Articles are free to read and shared under **CC BY-NC-ND 4.0**. [Contribute to forthcoming issues](https://thehumanquestionjournal.com/call-for-papers/).
+
 ## Current status
 
 The website is live at [thehumanquestionjournal.com](https://thehumanquestionjournal.com), deployed through Cloudflare Pages from this repository’s `main` branch.
 
 The editorial address is [editor@thehumanquestionjournal.com](mailto:editor@thehumanquestionjournal.com). Albert confirmed a successful delivery test on 8 November 2026 and authorised publication of the address. Cloudflare Email Routing forwards incoming messages to the editor’s existing inbox; outgoing mail from this address has not been verified.
 
-The first issue remains in preparation. No accepted articles have been supplied for publication. Display an ISSN, indexing, affiliations or editorial appointments only after confirmation.
+The editor supplied and authorised release of the complete first issue on 12 November 2026. The issue carries its stated publication date of 9 November 2026. ISSN and DOI applications remain pending; no unassigned identifiers or unverified indexing claims are displayed.
 
 ## Build and preview
 

@@ -4,11 +4,39 @@ import { mkdtemp, mkdir, writeFile, readFile, rm, symlink, access } from 'node:f
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
-import { buildProject, validateJournal, validateArticle, escapeHtml, safeJsonLd } from '../scripts/build.mjs';
+import { buildProject, validateJournal, validateArticle, validateOrcid, escapeHtml, safeJsonLd } from '../scripts/build.mjs';
 
 const journal = { title: 'The Human Question', subtitle: 'A Journal of Humanistic Inquiry', description: 'Human-centred inquiry.', founder: 'Albert Tan', officialWebsite: 'https://www.alberttansinhon.com', sourceCode: 'https://github.com/Albertito-AI/open-humanities-journal', siteUrl: 'https://preview.example.org', intendedDomain: 'https://thehumanquestionjournal.com', submissionEmail: null, issn: null, language: 'en-GB', stage: 'pilot', robotsIndex: false };
 const issue = { slug: 'volume-1-issue-1', title: 'First issue', volume: '1', number: '1', year: 2026, publishedDate: '2026-11-08' };
 const article = { slug: 'human-institutions', title: 'Human institutions', authors: ['A. Scholar'], abstract: 'A study of people and institutions.', keywords: ['law'], pdf: '/articles/human-institutions.pdf', publishedDate: '2026-11-08', licence: 'CC-BY-4.0', issueSlug: issue.slug, pages: '1–10' };
+
+test('ORCID validation accepts checked identifiers and rejects invalid identifiers and markup', () => {
+  assert.equal(validateOrcid('0009-0001-8996-7933'), '0009-0001-8996-7933');
+  assert.equal(validateOrcid(null), null);
+  for (const id of ['0009-0001-8996-7934', 'https://orcid.org/0009-0001-8996-7933', '<img src=x>']) assert.throws(() => validateOrcid(id), /ORCID/);
+});
+
+test('issue publication preserves absent volume and verified ORCID in readable citation records', async t => {
+  const f = await fixture(t, true);
+  await writeFile(join(f.rootDir, 'content/issues.json'), JSON.stringify([{ ...issue, volume: null, title: '2026, Number 1' }]));
+  await writeFile(join(f.rootDir, 'content/articles.json'), JSON.stringify([{ ...article, orcids: ['0009-0001-8996-7933'] }]));
+  const result = await buildProject(f);
+  const html = await readFile(join(result.outputDirectory, 'articles/human-institutions/index.html'), 'utf8');
+  assert.equal(html.match(/<a class="author-orcid" href="([^"]+)"/)[1], 'https://orcid.org/0009-0001-8996-7933');
+  assert.equal(html.includes('citation_volume'), false);
+  assert.equal(html.includes('citation_doi'), false);
+  assert.equal(html.includes('citation_issn'), false);
+  const metadata = JSON.parse(await readFile(join(result.outputDirectory, 'articles/human-institutions.json'), 'utf8'));
+  assert.equal(metadata.author[0].sameAs, 'https://orcid.org/0009-0001-8996-7933');
+  assert.equal(metadata.isPartOf.isPartOf['@type'], 'Periodical');
+  assert.equal((await readFile(join(result.outputDirectory, 'articles/human-institutions.bib'), 'utf8')).includes('volume'), false);
+  const ris = await readFile(join(result.outputDirectory, 'articles/human-institutions.ris'), 'utf8');
+  assert.ok(ris.includes('SP  - 1\r\nEP  - 10'));
+  assert.equal(ris.includes('VL  -'), false);
+  const issueHtml = await readFile(join(result.outputDirectory, 'issues/volume-1-issue-1/index.html'), 'utf8');
+  assert.ok(issueHtml.includes('/articles/human-institutions/'));
+  assert.ok(issueHtml.includes('noindex, nofollow'));
+});
 
 async function fixture(t, withArticle = false) {
   const rootDir = await mkdtemp(join(tmpdir(), 'thq-static-test-'));
