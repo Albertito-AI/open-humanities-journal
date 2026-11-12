@@ -44,7 +44,7 @@ Articles end with their conclusion. Do not append a References section, bibliogr
 
 The guide and template control production; the current dated policies control editorial handling and rights. Do not silently change an executed author agreement. Any exception requires an explicit recorded editorial decision and, where rights or approved text change, the relevant author's agreement. Record a new version and effective date for substantive changes and retain the preceding edition.
 
-The current journal has no published articles or assigned ISSN. Do not add identifiers, indexing, memberships, editorial appointments or preservation-service participation without evidence.
+The first issue, 2026 Number 1, contains five articles and has been supplied for release by the editor. Its stated publication date is 9 November 2026. No ISSN has yet been assigned. Do not add identifiers, indexing, memberships, editorial appointments or preservation-service participation without evidence.
 
 ## Maintainer checks
 

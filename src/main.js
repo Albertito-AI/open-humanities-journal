@@ -60,8 +60,8 @@ function renderArchive() {
   results.replaceChildren();
   if (!visible.length) {
     const empty = make('div', 'empty-state');
-    empty.append(make('h2', '', query ? 'No matching articles.' : 'The first issue is in preparation.'));
-    empty.append(make('p', '', query ? 'Try another title, author name or keyword.' : 'No articles have been published on this website yet. Accepted papers will appear here after peer review, revision and final proof approval.'));
+    empty.append(make('h2', '', query ? 'No matching articles.' : 'No articles are available in this catalogue.'));
+    empty.append(make('p', '', query ? 'Try another title, author name or keyword.' : 'Please visit the issue page or contact the editor if the catalogue is unavailable.'));
     if (query) {
       const clear = make('button', 'button button-secondary', 'Clear search');
       clear.type = 'button'; clear.addEventListener('click', () => { $('#archive-search').value = ''; renderArchive(); $('#archive-search').focus(); });

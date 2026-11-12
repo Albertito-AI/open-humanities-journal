@@ -1,0 +1,50 @@
+{
+  "issue": "2026, Number 1",
+  "publicationDate": "2026-11-09",
+  "releasePrepared": "2026-11-12",
+  "canonicalUrl": "https://thehumanquestionjournal.com/issues/2026-number-1/",
+  "publisher": "The Human Question Project",
+  "articleCount": 5,
+  "pageRange": "1–58",
+  "issn": null,
+  "doi": null,
+  "source": "Editor-supplied final complete issue with artistic cover",
+  "distributionNote": "The web distribution removes the embedded Content Credentials attachment and its attachment references to satisfy the repository no-embedded-files security rule. The supplied original is retained separately. All62 rendered pages,text,links,page labels andbookmarks were compared; substantive content is unchanged.",
+  "files": [
+    {
+      "path": "public/articles/THQ_2026_ed1_Article_1.pdf",
+      "bytes": 446225,
+      "sha256": "ecfbe2860587ebfcb37a64fe57a910fcc751067ffb097ba3d144c4270cde6733"
+    },
+    {
+      "path": "public/articles/THQ_2026_ed1_Article_2.pdf",
+      "bytes": 401904,
+      "sha256": "af57e450fd918883f7ac52eb3b2b22494b8290bb748718d577394f9d214f056f"
+    },
+    {
+      "path": "public/articles/THQ_2026_ed1_Article_3.pdf",
+      "bytes": 643200,
+      "sha256": "220ad2699d39dc344e8cf8426d37ccf505d2c2bbcca2380b02d4303f7018367e"
+    },
+    {
+      "path": "public/articles/THQ_2026_ed1_Article_4.pdf",
+      "bytes": 663305,
+      "sha256": "5eee6f2054ef03d9f873f6ce8e36e0695744e04be0c68a9e92333a72fe629fa6"
+    },
+    {
+      "path": "public/articles/THQ_2026_ed1_Article_5.pdf",
+      "bytes": 638032,
+      "sha256": "dec6ec48a78fbb43729142a0d6d654d8f82e6033c5f764b42451decd9bfa2fb6"
+    },
+    {
+      "path": "public/issues/2026-number-1/THQ_2026_Number_1_Complete_Issue.pdf",
+      "bytes": 5016973,
+      "sha256": "2c3bf5a415fe709f2deb4cecd5795699605b2eb58f497a26eb93b1c9e325cebc"
+    },
+    {
+      "path": "public/issues/2026-number-1/cover.jpg",
+      "bytes": 92362,
+      "sha256": "dc16c9f41a67669254d8b5002f5be3a2913cce6debeb2fe40e26be24f6a72c8f"
+    }
+  ]
+}
