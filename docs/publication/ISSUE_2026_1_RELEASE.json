@@ -9,7 +9,7 @@
   "issn": null,
   "doi": null,
   "source": "Editor-supplied final complete issue with artistic cover",
-  "distributionNote": "The web distribution removes the embedded Content Credentials attachment and its attachment references to satisfy the repository no-embedded-files security rule. The supplied original is retained separately. All 62 rendered pages, text, links, page labels and bookmarks were compared; substantive content is unchanged.",
+  "distributionNote": "The web distribution removes the embedded Content Credentials attachment and its attachment references to satisfy the repository no-embedded-files security rule. The supplied original is retained separately. The corrected article (11 pages) and complete issue (62 pages) were compared with the corrected originals: rendered pages, extracted text, links, page labels and bookmarks are unchanged by web sanitisation.",
   "files": [
     {
       "path": "public/articles/THQ_2026_ed1_Article_1.pdf",
@@ -28,8 +28,8 @@
     },
     {
       "path": "public/articles/THQ_2026_ed1_Article_4.pdf",
-      "bytes": 663305,
-      "sha256": "5eee6f2054ef03d9f873f6ce8e36e0695744e04be0c68a9e92333a72fe629fa6"
+      "bytes": 910425,
+      "sha256": "1bf8c62019af8e325afe1c83095d8e939237e81c32b7c9579e15722da3d2d6cf"
     },
     {
       "path": "public/articles/THQ_2026_ed1_Article_5.pdf",
@@ -38,13 +38,21 @@
     },
     {
       "path": "public/issues/2026-number-1/THQ_2026_Number_1_Complete_Issue.pdf",
-      "bytes": 5016973,
-      "sha256": "2c3bf5a415fe709f2deb4cecd5795699605b2eb58f497a26eb93b1c9e325cebc"
+      "bytes": 5291271,
+      "sha256": "f1d8666710d2da0538c54475d3a86d497ee4453b5d5420fc65ed57e811151dba"
     },
     {
       "path": "public/issues/2026-number-1/cover.jpg",
       "bytes": 92362,
       "sha256": "dc16c9f41a67669254d8b5002f5be3a2913cce6debeb2fe40e26be24f6a72c8f"
+    }
+  ],
+  "lastCorrectionDate": "2026-11-13",
+  "corrections": [
+    {
+      "date": "2026-11-13",
+      "article": "insurance-underwriting-and-social-protection",
+      "note": "Terence Chia Qi Han’s affiliation corrected to Director, Pro-Link Insurance Agency, Singapore in the article PDF, complete issue and article metadata. Scholarly content and pagination unchanged."
     }
   ]
 }

@@ -97,7 +97,17 @@
     "licence": "CC-BY-NC-ND-4.0",
     "issueSlug": "2026-number-1",
     "pages": "37–47",
-    "doi": null
+    "doi": null,
+    "affiliations": [
+      "Pro-Link Insurance Agency, Singapore"
+    ],
+    "authorRoles": [
+      "Director"
+    ],
+    "correction": {
+      "date": "2026-11-13",
+      "note": "Terence Chia Qi Han’s affiliation is Director, Pro-Link Insurance Agency, Singapore. The article PDF and complete issue have been corrected. The article’s scholarly content and pagination are unchanged."
+    }
   },
   {
     "slug": "teaching-legal-reasoning-generative-ai-thailand",
