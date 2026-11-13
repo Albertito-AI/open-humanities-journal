@@ -1,6 +1,7 @@
-"""Fail closed on active PDF/SVG content. This is not a malware scanner.
+"""Reject active PDF/SVG content and malformed PDF marked-content syntax.
 
-Parse locally without rendering or fetching links. Run each file in a bounded
+This is not a malware scanner. Parse locally without rendering or fetching links.
+Run each file in a bounded
 child process so a malformed document cannot indefinitely block CI.
 """
 from pathlib import Path
@@ -10,7 +11,8 @@ import sys
 import xml.etree.ElementTree as ET
 from urllib.parse import urlsplit
 from pypdf import PdfReader
-from pypdf.generic import IndirectObject, DictionaryObject, ArrayObject
+from pypdf.generic import (IndirectObject, DictionaryObject, ArrayObject,
+                           ContentStream, NameObject, StreamObject)
 
 MAX_BYTES = 100 * 1024 * 1024
 FORBIDDEN_KEYS = {'/JS', '/JavaScript', '/AA', '/OpenAction', '/AcroForm', '/XFA',
@@ -30,6 +32,26 @@ def safe_link(value):
         raise ValueError('unsafe link protocol')
     if parsed.scheme.lower() in {'https', 'http'} and (not parsed.hostname or parsed.username or parsed.password):
         raise ValueError('invalid or credential-bearing link')
+
+def audit_marked_content(stream, reader):
+    """Check tagged drawing syntax without interpreting image or font bytes."""
+    nesting = 0
+    for operands, operator in ContentStream(stream, reader).operations:
+        if operator == b'BMC':
+            if len(operands) != 1 or not isinstance(operands[0], NameObject):
+                raise ValueError('invalid PDF BMC tag operands')
+            nesting += 1
+        elif operator == b'BDC':
+            if (len(operands) != 2 or not isinstance(operands[0], NameObject)
+                    or not isinstance(operands[1], (NameObject, DictionaryObject))):
+                raise ValueError('invalid PDF BDC tag/property operands')
+            nesting += 1
+        elif operator == b'EMC':
+            if operands or nesting == 0:
+                raise ValueError('unbalanced PDF marked content or invalid EMC operands')
+            nesting -= 1
+    if nesting:
+        raise ValueError('unclosed PDF marked content')
 
 def audit_pdf(path):
     reader = PdfReader(path, strict=True)
@@ -62,11 +84,17 @@ def audit_pdf(path):
                 raise ValueError('unrecognised PDF action')
             if '/URI' in obj:
                 safe_link(obj['/URI'])
+            if isinstance(obj, StreamObject) and obj.get('/Subtype') == '/Form':
+                audit_marked_content(obj, reader)
             stack.extend((value, depth + 1) for value in obj.values())
         elif isinstance(obj, ArrayObject):
             stack.extend((value, depth + 1) for value in obj)
     if not reader.pages:
         raise ValueError('PDF has no pages')
+    for page in reader.pages:
+        if '/Contents' in page:
+            # A page's stream array is one logical stream; tags may span entries.
+            audit_marked_content(page['/Contents'], reader)
 
 def audit_svg(path):
     data = path.read_bytes()

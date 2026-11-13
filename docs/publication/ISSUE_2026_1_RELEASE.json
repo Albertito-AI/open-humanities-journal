@@ -9,7 +9,7 @@
   "issn": null,
   "doi": null,
   "source": "Editor-supplied final complete issue with artistic cover",
-  "distributionNote": "The web distribution removes the embedded Content Credentials attachment and its attachment references to satisfy the repository no-embedded-files security rule. The supplied original is retained separately. The corrected article (11 pages) and complete issue (62 pages) were compared with the corrected originals: rendered pages, extracted text, links, page labels and bookmarks are unchanged by web sanitisation.",
+  "distributionNote": "Article 4 opening-page PDF syntax repaired by escaping parentheses in a marked-content tag. All vector text, 161 article links, issue bookmarks, page labels and page content retained. Published downloads use new corrected filenames; obsolete download routes redirect to the replacements.",
   "files": [
     {
       "path": "public/articles/THQ_2026_ed1_Article_1.pdf",
@@ -27,9 +27,9 @@
       "sha256": "220ad2699d39dc344e8cf8426d37ccf505d2c2bbcca2380b02d4303f7018367e"
     },
     {
-      "path": "public/articles/THQ_2026_ed1_Article_4.pdf",
-      "bytes": 910425,
-      "sha256": "1bf8c62019af8e325afe1c83095d8e939237e81c32b7c9579e15722da3d2d6cf"
+      "path": "public/articles/THQ_2026_ed1_Article_4_corrected_20261113.pdf",
+      "bytes": 888004,
+      "sha256": "f527a5f4eda37c2ee89fee7e87321add65def8d124989a77905d14f74ed28187"
     },
     {
       "path": "public/articles/THQ_2026_ed1_Article_5.pdf",
@@ -37,9 +37,9 @@
       "sha256": "dec6ec48a78fbb43729142a0d6d654d8f82e6033c5f764b42451decd9bfa2fb6"
     },
     {
-      "path": "public/issues/2026-number-1/THQ_2026_Number_1_Complete_Issue.pdf",
-      "bytes": 5291271,
-      "sha256": "f1d8666710d2da0538c54475d3a86d497ee4453b5d5420fc65ed57e811151dba"
+      "path": "public/issues/2026-number-1/THQ_2026_Number_1_Complete_Issue_corrected_20261113.pdf",
+      "bytes": 5240230,
+      "sha256": "eee90fa069552eff5ffcf94b65f116fe63143715bfd62bcacfd9e25a1a7d761f"
     },
     {
       "path": "public/issues/2026-number-1/cover.jpg",
@@ -54,5 +54,6 @@
       "article": "insurance-underwriting-and-social-protection",
       "note": "Terence Chia Qi Han’s affiliation corrected to Director, Pro-Link Insurance Agency, Singapore in the article PDF, complete issue and article metadata. Scholarly content and pagination unchanged."
     }
-  ]
+  ],
+  "formattingCorrectionDate": "2026-11-13"
 }

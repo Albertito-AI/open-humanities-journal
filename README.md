@@ -14,7 +14,7 @@ The journal's process takes place by email: **submission → desk decision → p
 
 ## The founding issue is available
 
-**[Read 2026, Number 1 on the journal website](https://thehumanquestionjournal.com/issues/2026-number-1/)** · [Complete issue PDF](https://thehumanquestionjournal.com/issues/2026-number-1/THQ_2026_Number_1_Complete_Issue.pdf)
+**[Read 2026, Number 1 on the journal website](https://thehumanquestionjournal.com/issues/2026-number-1/)** · [Complete issue PDF](https://thehumanquestionjournal.com/issues/2026-number-1/THQ_2026_Number_1_Complete_Issue_corrected_20261113.pdf)
 
 Published **9 November 2026** by **The Human Question Project**, the first issue contains five articles:
 

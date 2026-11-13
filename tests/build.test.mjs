@@ -243,3 +243,79 @@ test('affiliation corrections survive public exports and reject author misalignm
   await assert.rejects(validateArticle({ ...corrected, affiliations: [] }, context), /match the author list/);
   await assert.rejects(validateArticle({ ...corrected, correction: { date: '2026-02-31', note: 'Invalid' } }, context), /real YYYY-MM-DD/);
 });
+
+test('corrected PDFs use fresh links throughout publication and keep old URLs as temporary redirects', async t => {
+  const f = await fixture(t, true);
+  const pdf = '/articles/human-institutions_corrected_20261113.pdf';
+  const issuePdf = `/issues/${issue.slug}/complete_corrected_20261113.pdf`;
+  const routes = [{ from: article.pdf, to: pdf }, { from: `/issues/${issue.slug}/complete.pdf`, to: issuePdf }];
+  await writeFile(join(f.publicDir, pdf), await readFile(join(f.publicDir, article.pdf)));
+  await rm(join(f.publicDir, article.pdf));
+  await mkdir(join(f.publicDir, 'issues', issue.slug), { recursive: true });
+  await writeFile(join(f.publicDir, issuePdf), '%PDF-1.4\nCorrected issue fixture\n%%EOF');
+  await writeFile(join(f.rootDir, 'content/articles.json'), JSON.stringify([{ ...article, pdf }]));
+  await writeFile(join(f.rootDir, 'content/issues.json'), JSON.stringify([{ ...issue, pdf: issuePdf }]));
+  await writeFile(join(f.rootDir, 'content/pdf-redirects.json'), JSON.stringify(routes));
+  const result = await buildProject(f);
+  assert.equal(await readFile(join(result.outputDirectory, '_redirects'), 'utf8'), routes.map(route => `${route.from} ${route.to} 302`).join('\n') + '\n');
+  const html = await readFile(join(result.outputDirectory, 'articles/human-institutions/index.html'), 'utf8');
+  const issueHtml = await readFile(join(result.outputDirectory, `issues/${issue.slug}/index.html`), 'utf8');
+  const metadata = JSON.parse(await readFile(join(result.outputDirectory, 'articles/human-institutions.json'), 'utf8'));
+  const catalogue = JSON.parse(await readFile(join(result.outputDirectory, 'catalogue.json'), 'utf8'));
+  assert.ok(html.includes(`href="${pdf}"`));
+  assert.ok(html.includes(`name="citation_pdf_url" content="${journal.siteUrl}${pdf}"`));
+  assert.ok(issueHtml.includes(`href="${pdf}"`) && issueHtml.includes(`href="${issuePdf}"`));
+  assert.equal(metadata.encoding.contentUrl, `${journal.siteUrl}${pdf}`);
+  assert.equal(catalogue.articles[0].pdfPath, pdf);
+  assert.equal(catalogue.issues[0].pdf, issuePdf);
+  for (const route of routes) {
+    await assert.rejects(access(join(result.outputDirectory, route.from)), { code: 'ENOENT' });
+    for (const output of [html, issueHtml, JSON.stringify(metadata), JSON.stringify(catalogue)]) assert.ok(!output.includes(route.from));
+  }
+  const headers = await readFile(join(result.outputDirectory, '_headers'), 'utf8');
+  assert.ok(headers.includes('Cache-Control: public, no-cache, max-age=0, must-revalidate'));
+  for (const path of routes.flatMap(route => [route.from, route.to])) assert.ok(headers.includes(`\n${path}\n  ! Cache-Control\n  Cache-Control: no-store\n`));
+  const manifest = JSON.parse(await readFile(join(result.outputDirectory, 'export-manifest.json'), 'utf8'));
+  assert.ok(manifest.files.some(file => file.path === '_redirects'));
+});
+
+test('PDF redirect configuration is optional and malformed configurations fail without replacing a working build', async t => {
+  const f = await fixture(t, true);
+  await buildProject(f);
+  await assert.rejects(access(join(f.rootDir, 'dist/_redirects')), { code: 'ENOENT' });
+  const original = await readFile(join(f.rootDir, 'dist/catalogue.json'), 'utf8');
+  for (const config of [null, {}, [{ from: '/articles/old.pdf' }], [{ from: '/articles/old.pdf', to: article.pdf }, { from: '/articles/old.pdf', to: article.pdf }]]) {
+    await writeFile(join(f.rootDir, 'content/pdf-redirects.json'), JSON.stringify(config));
+    await assert.rejects(buildProject(f), /PDF redirect|Duplicate/);
+    assert.equal(await readFile(join(f.rootDir, 'dist/catalogue.json'), 'utf8'), original);
+  }
+});
+
+test('PDF redirects reject external URLs, path tricks and configuration injection', async t => {
+  const f = await fixture(t, true);
+  for (const path of ['https://attacker.example/old.pdf', '//attacker.example/old.pdf', '/resources/old.pdf', '/articles/../private.pdf', '/articles/%2e%2e/private.pdf', '/articles/.hidden/old.pdf', '/articles//old.pdf', '/articles/old.pdf?version=1', '/articles/old.pdf#page=1', '/articles/old.pdf\n/evil /elsewhere 302', '/articles/*/old.pdf', '/articles/\\old.pdf']) {
+    for (const config of [[{ from: path, to: article.pdf }], [{ from: '/articles/old.pdf', to: path }]]) {
+      await writeFile(join(f.rootDir, 'content/pdf-redirects.json'), JSON.stringify(config));
+      await assert.rejects(buildProject(f), /safe same-site PDF path/);
+    }
+  }
+});
+
+test('PDF redirects reject loops, chains, unpublished destinations and remaining obsolete assets', async t => {
+  const f = await fixture(t, true);
+  const old = '/articles/old.pdf', intermediate = '/articles/intermediate.pdf';
+  for (const routes of [
+    [{ from: old, to: old }],
+    [{ from: old, to: intermediate }, { from: intermediate, to: old }],
+    [{ from: old, to: intermediate }, { from: intermediate, to: article.pdf }],
+    [{ from: old, to: '/issues/volume-1-issue-1/unpublished.pdf' }],
+  ]) {
+    await writeFile(join(f.rootDir, 'content/pdf-redirects.json'), JSON.stringify(routes));
+    await assert.rejects(buildProject(f), /themselves, chain or form loops|published article or issue PDF/);
+  }
+  const obsolete = `/issues/${issue.slug}/obsolete.pdf`;
+  await mkdir(join(f.publicDir, 'issues', issue.slug), { recursive: true });
+  await writeFile(join(f.publicDir, obsolete), '%PDF-1.4\nObsolete fixture\n%%EOF');
+  await writeFile(join(f.rootDir, 'content/pdf-redirects.json'), JSON.stringify([{ from: obsolete, to: article.pdf }]));
+  await assert.rejects(buildProject(f), /source still exists as a public asset/);
+});
