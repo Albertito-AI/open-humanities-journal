@@ -1,0 +1,20 @@
+{
+  "title": "Open Humanities Journal: website software",
+  "description": "A portable open-source website for The Human Question: author guidance, email submissions, house-style resources and an open-access PDF archive. No database or author accounts required. This deposit preserves a dated source snapshot of the implementation and documentation, with the limitations stated in the repository.",
+  "creators": [
+    {
+      "name": "Tan, Sin Hon Albert",
+      "orcid": "0009-0001-8996-7933"
+    }
+  ],
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "notes": "This DOI identifies the website SOFTWARE archive, not a journal issue or individual article. MIT applies only to original software. Bundled journal articles remain credited to their respective authors under their separately stated CC BY-NC-ND 4.0 terms; journal branding is not licensed by the software licence. Article DOI registration is separate. Archival publication does not establish peer review, independent validation or production readiness.",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Albertito-AI/open-humanities-journal",
+      "relation": "isSupplementTo"
+    }
+  ]
+}
