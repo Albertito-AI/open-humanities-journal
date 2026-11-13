@@ -65,3 +65,7 @@ Inspect the landing page, PDF download, author order, licence and citation files
 Copy the entire `dist/` directory to any static web host that serves directory `index.html` files. `dist/export-manifest.json` lists the other distribution files, their sizes and SHA-256 hashes. Keep separate copies of the repository, final PDFs and built distribution. The manifest supports integrity checks; it is not a preservation-service deposit.
 
 If the domain changes, update `siteUrl` and rebuild so canonical URLs and citations change consistently. Preserve established article slugs and configure host-level redirects when replacing an existing domain or URL.
+
+## Author affiliations and corrections
+
+Optional `affiliations` and `authorRoles` arrays align with the `authors` array; use `null` for an unknown entry. Record only editor-confirmed information. These fields appear on the article page and in public structured metadata. A `correction` object containing an ISO `date` and a concise `note` creates a visible dated notice and records the modification in metadata. Preserve the original publication date and update the affected PDF checksums in the issue release manifest.

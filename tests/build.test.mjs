@@ -224,3 +224,22 @@ test('the call for papers links to existing author resources and retains homepag
   }
   assert.ok(cfp.includes('mailto:editor@thehumanquestionjournal.com'));
 });
+
+test('affiliation corrections survive public exports and reject author misalignment', async t => {
+  const f = await fixture(t, true);
+  const corrected = { ...article, affiliations: ['Pro-Link Insurance Agency, Singapore'], authorRoles: ['Director'], correction: { date: '2026-11-13', note: 'Affiliation corrected; scholarly content unchanged.' } };
+  await writeFile(join(f.rootDir, 'content/articles.json'), JSON.stringify([corrected]));
+  const result = await buildProject(f);
+  const html = await readFile(join(result.outputDirectory, 'articles/human-institutions/index.html'), 'utf8');
+  assert.ok(html.includes('Director, Pro-Link Insurance Agency, Singapore'));
+  assert.ok(html.includes('name="citation_author_institution" content="Pro-Link Insurance Agency, Singapore"'));
+  assert.ok(html.includes('Affiliation corrected; scholarly content unchanged.'));
+  const metadata = JSON.parse(await readFile(join(result.outputDirectory, 'articles/human-institutions.json'), 'utf8'));
+  assert.equal(metadata.author[0].affiliation.name, corrected.affiliations[0]);
+  assert.equal(metadata.author[0].jobTitle, 'Director');
+  assert.equal(metadata.datePublished, article.publishedDate);
+  assert.equal(metadata.dateModified, '2026-11-13');
+  const context = { publicDir: f.publicDir, issues: new Set([issue.slug]) };
+  await assert.rejects(validateArticle({ ...corrected, affiliations: [] }, context), /match the author list/);
+  await assert.rejects(validateArticle({ ...corrected, correction: { date: '2026-02-31', note: 'Invalid' } }, context), /real YYYY-MM-DD/);
+});
