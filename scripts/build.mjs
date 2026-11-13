@@ -164,6 +164,30 @@ async function write(directory, path, contents) { const target = join(directory,
 async function allFiles(directory, prefix = '') { const result = []; for (const item of await readdir(directory, { withFileTypes: true })) { const path = prefix ? `${prefix}/${item.name}` : item.name; if (item.isDirectory()) result.push(...await allFiles(join(directory, item.name), path)); else result.push(path); } return result.sort(); }
 async function jsonFile(path) { return JSON.parse(await readFile(path, 'utf8')); }
 
+async function pdfRedirects(input, { publicDir, publishedPdfs }) {
+  if (!Array.isArray(input) || input.length > 2000) throw new Error('PDF redirects must be an array of at most 2000 routes');
+  const safePath = (value, label) => {
+    if (typeof value !== 'string' || value.length > 450 || !/^\/(?:articles|issues)\/(?:[a-zA-Z0-9][a-zA-Z0-9._-]*\/)*[a-zA-Z0-9][a-zA-Z0-9._-]*\.pdf$/.test(value)) throw new Error(`${label} must be a safe same-site PDF path under /articles/ or /issues/`);
+    return value;
+  };
+  const routes = input.map(value => {
+    const route = object(value, 'PDF redirect');
+    return { from: safePath(route.from, 'PDF redirect source'), to: safePath(route.to, 'PDF redirect destination') };
+  });
+  const sources = new Set(routes.map(route => route.from));
+  if (sources.size !== routes.length) throw new Error('Duplicate PDF redirect source');
+  for (const route of routes) {
+    if (sources.has(route.to)) throw new Error('PDF redirects must not point to themselves, chain or form loops');
+    if (!publishedPdfs.has(route.to)) throw new Error(`PDF redirect destination must be a published article or issue PDF: ${route.to}`);
+    const existing = await lstat(join(publicDir, route.from.slice(1))).catch(error => {
+      if (error.code === 'ENOENT') return null;
+      throw error;
+    });
+    if (existing) throw new Error(`PDF redirect source still exists as a public asset: ${route.from}`);
+  }
+  return routes.sort((a, b) => a.from.localeCompare(b.from));
+}
+
 export async function buildProject({ rootDir = process.cwd() } = {}) {
   const root = resolve(rootDir), publicDir = join(root, 'public');
   const journal = validateJournal(await jsonFile(join(root, 'content/journal.json')));
@@ -192,12 +216,17 @@ export async function buildProject({ rootDir = process.cwd() } = {}) {
   }
   const publishedPdfs = new Set(articles.map(article => article.pdf.slice(1)));
   for (const asset of assets) if (asset.path.startsWith('articles/') && !publishedPdfs.has(asset.path)) throw new Error(`Unreferenced file under public/articles would be exposed: ${asset.path}`);
+  const rawRedirects = await jsonFile(join(root, 'content/pdf-redirects.json')).catch(error => {
+    if (error.code === 'ENOENT') return [];
+    throw error;
+  });
+  const redirects = await pdfRedirects(rawRedirects, { publicDir, publishedPdfs: new Set([...articles.map(article => article.pdf), ...issues.map(issue => issue.pdf).filter(Boolean)]) });
   const sources = Object.fromEntries(await Promise.all(['index.html', 'styles.css', 'main.js'].map(async name => [name, await readFile(join(root, 'src', name))])));
   const cfpSource = await readFile(join(root, 'src/call-for-papers.html'), 'utf8').catch(error => {
     if (error.code === 'ENOENT') return null;
     throw error;
   });
-  const reserved = new Set(['call-for-papers/index.html', 'index.html', 'styles.css', 'main.js', 'catalogue.json', 'journal.json', 'llms.txt', 'robots.txt', 'sitemap.xml', 'export-manifest.json', '_headers']);
+  const reserved = new Set(['call-for-papers/index.html', 'index.html', 'styles.css', 'main.js', 'catalogue.json', 'journal.json', 'llms.txt', 'robots.txt', 'sitemap.xml', 'export-manifest.json', '_headers', '_redirects']);
   for (const asset of assets) if (reserved.has(asset.path) || /^(?:styles|main)\.[a-f0-9]{12}\.(?:css|js)$/.test(asset.path) || articles.some(a => asset.path === `articles/${a.slug}/index.html` || asset.path === `articles/${a.slug}.json` || asset.path === `articles/${a.slug}.ris` || asset.path === `articles/${a.slug}.bib`)) throw new Error(`Public asset conflicts with a generated file: ${asset.path}`);
   const staging = await mkdtemp(join(root, '.static-build-'));
   try {
@@ -242,8 +271,11 @@ export async function buildProject({ rootDir = process.cwd() } = {}) {
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
   Strict-Transport-Security: max-age=31536000
   Cross-Origin-Opener-Policy: same-origin
-  Cache-Control: public, max-age=0, must-revalidate
-`);
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+${[...new Set(redirects.flatMap(route => [route.from, route.to]))].sort().map(path => `\n${path}\n  ! Cache-Control\n  Cache-Control: no-store\n`).join('')}`);
+    // Pages processes redirects before headers. Fresh PDF paths avoid previously
+    // cached bytes; 302 keeps old citations pointed at the current publication.
+    if (redirects.length) await write(staging, '_redirects', redirects.map(route => `${route.from} ${route.to} 302`).join('\n') + '\n');
     if (journal.siteUrl && journal.submissionEmail) await write(staging, '.well-known/security.txt', `Contact: mailto:${journal.submissionEmail}\nExpires: 2027-11-08T00:00:00Z\nPreferred-Languages: en\nCanonical: ${journal.siteUrl}/.well-known/security.txt\n`);
     const files = [];
     for (const path of await allFiles(staging)) { const bytes = await readFile(join(staging, path)); files.push({ path, bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') }); }
