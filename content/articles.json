@@ -72,7 +72,10 @@
     "licence": "CC-BY-NC-ND-4.0",
     "issueSlug": "2026-number-1",
     "pages": "25–36",
-    "doi": null
+    "doi": null,
+    "affiliations": [
+      "Faculty of Law, University of Groningen"
+    ]
   },
   {
     "slug": "insurance-underwriting-and-social-protection",
@@ -132,6 +135,9 @@
     "licence": "CC-BY-NC-ND-4.0",
     "issueSlug": "2026-number-1",
     "pages": "48–58",
-    "doi": null
+    "doi": null,
+    "affiliations": [
+      "Faculty of Law, Prince of Songkla University, Thailand"
+    ]
   }
 ]
