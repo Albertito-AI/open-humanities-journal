@@ -422,8 +422,8 @@ sources(d,[('Reference: COPE, Ethical Guidelines for Peer Reviewers','https://do
 save(d,'Reviewer_Guide_and_Report_Form')
 
 # 8. Agreement template: it is not executed by publication of this blank form.
-d=new('Author declaration','Publication agreement and rights schedule','Agreement template · complete after acceptance')
-intro(d,'This form records the author declarations and non-exclusive publication permission for an accepted contribution to The Human Question: A Journal of Humanistic Inquiry, published by Albert Tan Sin Hon, Singapore. It is completed after acceptance and before publication. Downloading this blank form does not execute an agreement. The editor and all authors must confirm the completed terms and any exceptions in writing.')
+d=new('Author declaration','Publication agreement and rights schedule','Agreement template · complete after acceptance', version='1.1', effective_date='20 November 2026')
+intro(d,'This form records author declarations and non-exclusive publication permission for an accepted contribution to The Human Question: A Journal of Humanistic Inquiry. The publisher is The Human Question Project, operated by Albert Tan Sin Hon, Singapore. Complete the form after acceptance and before publication. Downloading it does not execute an agreement. The editor and all authors must confirm the completed terms and any exceptions in writing.')
 table(d,['Article record','Details to complete'],[('Article title','[Insert final title]'),('All authors, in order','[Insert names]'),('Corresponding author and email','[Insert]'),('Acceptance date / manuscript reference','[Insert confirmed details]'),('Rights holder, if not the author(s)','[Identify and attach authority]'),('Excluded third-party material','[Identify material and its separate licence or permission, or state none]')],[155,331])
 h(d,'1. Author declarations')
 add(d,'Each author confirms that they meet the journal’s authorship criteria, approve the final text and author order, and accept responsibility for their contribution. The work is original except for material properly acknowledged, is not simultaneously under consideration elsewhere, and any prior publication, preprint, thesis or substantial overlap has been disclosed to the editor.')
@@ -441,6 +441,6 @@ add(d,'The journal will publish only assigned identifiers and confirmed dates. A
 h(d,'5. Confirmations and any agreed exceptions')
 table(d,['Confirmation','Complete and return to the editor'],[('All author / rights-holder names','[Insert; attach an additional sheet if necessary]'),('Signature or explicit written confirmation','[Each author signs or provides a recorded email confirmation. The corresponding author may confirm for others only with documented authority.]'),('Date','[Insert]'),('Exceptions or additional permissions','[Record exact terms, or state none]'),('Journal acceptance of completed agreement','[Editor name, role, written confirmation and date]')],[155,331])
 add(d,'Return the completed form and any permission evidence to '+EMAIL+'. Keep a copy. A disputed or incomplete permission must be resolved before release; the editor must not sign for the author. No general indemnity, copyright transfer or fee obligation is created by this template.')
-note(d,'Related documents: Author Instructions; Editorial and Peer-Review Policy; Publication Ethics Policy; Access, Rights and Privacy Policy; Publication Style Guide. Version 1.0, '+DATE+'.')
+note(d,'Related documents: Author Instructions; Editorial and Peer-Review Policy; Publication Ethics Policy; Access, Rights and Privacy Policy; Publication Style Guide. Template version 1.1, 20 November 2026.')
 save(d,'Author_Declaration_and_Publication_Agreement')
 
