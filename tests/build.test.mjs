@@ -209,14 +209,17 @@ test('the call for papers is a complete static page with the deployed origin and
   assert.ok(!preview.includes(`${journal.intendedDomain}/call-for-papers/`));
 });
 
-test('the call for papers links to existing author resources and retains homepage hash views', async () => {
+test('the call for papers links to existing author resources and retains homepage hash views', async t => {
+  const generated = await buildProject(await fixture(t));
   const home = await readFile(new URL('../src/index.html', import.meta.url), 'utf8');
   const cfp = await readFile(new URL('../src/call-for-papers.html', import.meta.url), 'utf8');
   assert.ok((home.match(/href="\/call-for-papers\/"/g) ?? []).length >= 3);
   for (const match of cfp.matchAll(/(?:href|src)="(\/[^\"]*)"/g)) {
     const path = match[1];
     if (path === '/' || path === '/call-for-papers/' || path === '/styles.css') continue;
-    if (path.startsWith('/#')) {
+    if (path === '/rss.xml') {
+      await access(join(generated.outputDirectory, 'rss.xml'));
+    } else if (path.startsWith('/#')) {
       assert.ok(home.includes(`id="${path.slice(2)}" data-view="${path.slice(2)}"`), `Existing hash view: ${path}`);
     } else {
       await access(new URL(`../public${path}`, import.meta.url));
@@ -263,7 +266,9 @@ test('corrected PDFs use fresh links throughout publication and keep old URLs as
   const metadata = JSON.parse(await readFile(join(result.outputDirectory, 'articles/human-institutions.json'), 'utf8'));
   const catalogue = JSON.parse(await readFile(join(result.outputDirectory, 'catalogue.json'), 'utf8'));
   assert.ok(html.includes(`href="${pdf}"`));
-  assert.ok(html.includes(`name="citation_pdf_url" content="${journal.siteUrl}${pdf}"`));
+  const alias = `/articles/${article.slug}/${pdf.split('/').at(-1)}`;
+  assert.ok(html.includes(`name="citation_pdf_url" content="${journal.siteUrl}${alias}"`));
+  assert.deepEqual(await readFile(join(result.outputDirectory, alias)), await readFile(join(result.outputDirectory, pdf)));
   assert.ok(issueHtml.includes(`href="${pdf}"`) && issueHtml.includes(`href="${issuePdf}"`));
   assert.equal(metadata.encoding.contentUrl, `${journal.siteUrl}${pdf}`);
   assert.equal(catalogue.articles[0].pdfPath, pdf);
@@ -318,4 +323,60 @@ test('PDF redirects reject loops, chains, unpublished destinations and remaining
   await writeFile(join(f.publicDir, obsolete), '%PDF-1.4\nObsolete fixture\n%%EOF');
   await writeFile(join(f.rootDir, 'content/pdf-redirects.json'), JSON.stringify([{ from: obsolete, to: article.pdf }]));
   await assert.rejects(buildProject(f), /source still exists as a public asset/);
+});
+
+
+test('Scholar PDF aliases share the article directory and preserve original bytes and metadata', async t => {
+  const f = await fixture(t, true);
+  const result = await buildProject(f);
+  const html = await readFile(join(result.outputDirectory, 'articles/human-institutions/index.html'), 'utf8');
+  const pdfUrl = html.match(/name="citation_pdf_url" content="([^"]+)"/)[1];
+  const canonical = html.match(/rel="canonical" href="([^"]+)"/)[1];
+  assert.equal(new URL('.', pdfUrl).href, canonical);
+  const alias = new URL(pdfUrl).pathname;
+  const sourceBytes = await readFile(join(f.publicDir, article.pdf));
+  assert.deepEqual(await readFile(join(result.outputDirectory, alias)), sourceBytes);
+  assert.deepEqual(await readFile(join(result.outputDirectory, article.pdf)), sourceBytes);
+  const metadata = JSON.parse(await readFile(join(result.outputDirectory, 'articles/human-institutions.json'), 'utf8'));
+  assert.equal(metadata['@id'], canonical);
+  assert.equal(metadata.encoding.contentUrl, journal.siteUrl + article.pdf);
+});
+
+test('RSS preserves publication dates, individual authors, rights and stable links without inventing identifiers', async t => {
+  const f = await fixture(t, true);
+  await writeFile(join(f.rootDir, 'content/articles.json'), JSON.stringify([{ ...article,
+    title: 'Law & <institutions>', authors: ['A. Scholar', 'B. Scholar'],
+    abstract: 'An abstract with <script> and an ampersand &.', reviewerEmail: 'private@example.org', doi: null,
+  }]));
+  const result = await buildProject(f);
+  const feed = await readFile(join(result.outputDirectory, 'rss.xml'), 'utf8');
+  assert.equal((feed.match(/<item>/g) ?? []).length, 1);
+  assert.ok(feed.includes('<title>Law &amp; &lt;institutions&gt;</title>'));
+  assert.ok(feed.includes('<dc:creator>A. Scholar</dc:creator>'));
+  assert.ok(feed.includes('<dc:creator>B. Scholar</dc:creator>'));
+  assert.ok(feed.includes('<pubDate>Sun, 08 Nov 2026 00:00:00 GMT</pubDate>'));
+  assert.ok(feed.includes(`<guid isPermaLink="true">${journal.siteUrl}/articles/human-institutions/</guid>`));
+  assert.ok(feed.includes('<dc:rights>https://creativecommons.org/licenses/by/4.0/</dc:rights>'));
+  assert.ok(feed.includes('An abstract with &lt;script&gt; and an ampersand &amp;.'));
+  assert.ok(!feed.includes('<script>'));
+  assert.ok(!feed.includes('private@example.org'));
+  assert.ok(!feed.includes('dc:identifier'));
+  assert.ok(!feed.includes('issn'));
+});
+
+test('RSS is advertised on every page template and published with its MIME type and manifest entry', async t => {
+  const f = await fixture(t, true);
+  for (const name of ['index.html', 'call-for-papers.html']) {
+    await writeFile(join(f.rootDir, 'src', name), await readFile(new URL('../src/' + name, import.meta.url)));
+  }
+  const result = await buildProject(f);
+  for (const path of ['index.html', 'call-for-papers/index.html', 'articles/human-institutions/index.html', `issues/${issue.slug}/index.html`]) {
+    const html = await readFile(join(result.outputDirectory, path), 'utf8');
+    assert.ok(html.includes(`rel="alternate" type="application/rss+xml" title="The Human Question articles" href="${journal.siteUrl}/rss.xml"`), path);
+    assert.ok(html.includes('href="/rss.xml">Article feed (RSS)</a>'), path);
+  }
+  assert.ok((await readFile(join(result.outputDirectory, '_headers'), 'utf8')).includes('/rss.xml\n  Content-Type: application/rss+xml; charset=utf-8'));
+  const manifest = JSON.parse(await readFile(join(result.outputDirectory, 'export-manifest.json'), 'utf8'));
+  assert.ok(manifest.files.some(file => file.path === 'rss.xml'));
+  assert.ok(manifest.files.some(file => file.path === 'articles/human-institutions/human-institutions.pdf'));
 });

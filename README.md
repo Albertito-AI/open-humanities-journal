@@ -74,6 +74,12 @@ The software licence does not grant rights to articles, reviewer reports, person
 
 Development is directed by Albert Tan with assistance from coding agents. Human editors remain responsible for peer review, publication decisions and truthful journal information.
 
+## Publication discovery
+
+The [article RSS feed](https://thehumanquestionjournal.com/rss.xml) is generated from the approved article catalogue on each build. It carries the actual authors, full abstracts, original publication dates, canonical article links and article licences. Readers and applications can subscribe without an account. The HTML pages advertise the feed for automatic discovery.
+
+Each article landing page also provides a byte-identical copy of its approved PDF within the same URL directory for Google Scholar metadata. Existing PDF URLs and the canonical article pages remain available; no publication identifiers are assigned by this build.
+
 ## Connected research and learning
 
 [Albert’s resource guide](https://alberttansinhon.com/explore/) connects the journal with his open-access book, teaching companion, research catalogue and creative work. [GitHub profile](https://github.com/Albertito-AI) · [Open learning](https://alberttansinhon.com/ibol/) · [Listen and learn](https://alberttansinhon.com/listen-and-learn/). Journal submissions go to the editorial address; professional enquiries to Albert go to [info@alberttansinhon.com](mailto:info@alberttansinhon.com) or through his personal website. Commercial engagements do not confer publication preference.
