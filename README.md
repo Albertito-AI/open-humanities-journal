@@ -6,7 +6,9 @@ The open-source website for **The Human Question: A Journal of Humanistic Inquir
 
 **Albert Tan Sin Hon, President and Editor-in-Chief.**
 
-[Source on GitHub](https://github.com/Albertito-AI/open-humanities-journal) · [Albert Tan's website](https://www.alberttansinhon.com)
+[Source on GitHub](https://github.com/Albertito-AI/open-humanities-journal) · [Albert Tan's website](https://alberttansinhon.com)
+
+**Professional enquiries to Albert:** [info@alberttansinhon.com](mailto:info@alberttansinhon.com). Journal submissions and editorial enquiries: [editor@thehumanquestionjournal.com](mailto:editor@thehumanquestionjournal.com).
 
 This is a small, portable static website: journal information, submission instructions, house style, an article archive and links to final open-access PDFs. It is an independent website, not an OJS installation.
 
@@ -74,7 +76,7 @@ Development is directed by Albert Tan with assistance from coding agents. Human 
 
 ## Connected research and learning
 
-[Albert’s resource guide](https://www.alberttansinhon.com/explore/) connects the journal with his open-access book, teaching companion, research catalogue and creative work. [GitHub profile](https://github.com/Albertito-AI) · [Open learning](https://www.alberttansinhon.com/ibol/) · [Listen and learn](https://www.alberttansinhon.com/listen-and-learn/). Journal submissions go to the editorial address; professional enquiries go through Albert’s personal website. Commercial engagements do not confer publication preference.
+[Albert’s resource guide](https://alberttansinhon.com/explore/) connects the journal with his open-access book, teaching companion, research catalogue and creative work. [GitHub profile](https://github.com/Albertito-AI) · [Open learning](https://alberttansinhon.com/ibol/) · [Listen and learn](https://alberttansinhon.com/listen-and-learn/). Journal submissions go to the editorial address; professional enquiries to Albert go to [info@alberttansinhon.com](mailto:info@alberttansinhon.com) or through his personal website. Commercial engagements do not confer publication preference.
 
 [Atlas Open Mathematics](https://github.com/Albertito-AI/atlas-open-mathematics) is an experimental public research and teaching project. Selected work may be submitted through the journal’s ordinary review process. The [research-to-publication guide](docs/ATLAS_RESEARCH_BRIDGE.md) explains evidence versions, human responsibility, independent review and teaching rights. Repository activity does not create a submission, acceptance or published journal article.
 
