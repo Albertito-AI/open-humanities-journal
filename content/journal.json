@@ -15,5 +15,11 @@
   "robotsIndex": true,
   "editorInChief": "Albert Tan Sin Hon",
   "president": "Albert Tan Sin Hon",
-  "publisher": "The Human Question Project"
+  "publisher": "The Human Question Project",
+  "currentCall": {
+    "issue": "Second issue",
+    "editorialQuestion": "Who gets to correct the record?",
+    "submissionBasis": "rolling",
+    "fieldTrialGuide": "https://github.com/Albertito-AI/Albertito-AI/tree/main/teaching/human-agent-field-trials"
+  }
 }

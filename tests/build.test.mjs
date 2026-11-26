@@ -185,7 +185,11 @@ test('the call for papers is a complete static page with the deployed origin and
   const f = await fixture(t);
   const template = await readFile(new URL('../src/call-for-papers.html', import.meta.url), 'utf8');
   await writeFile(join(f.rootDir, 'src/call-for-papers.html'), template);
-  await writeFile(join(f.rootDir, 'content/journal.json'), JSON.stringify({ ...journal, siteUrl: journal.intendedDomain, robotsIndex: true }));
+  const currentCall = {
+    issue: 'Second issue', editorialQuestion: 'Who gets to correct the record?',
+    submissionBasis: 'rolling', fieldTrialGuide: 'https://example.org/field-card',
+  };
+  await writeFile(join(f.rootDir, 'content/journal.json'), JSON.stringify({ ...journal, currentCall, siteUrl: journal.intendedDomain, robotsIndex: true }));
   const result = await buildProject(f);
   const html = await readFile(join(result.outputDirectory, 'call-for-papers/index.html'), 'utf8');
   const url = `${journal.intendedDomain}/call-for-papers/`;
@@ -197,7 +201,13 @@ test('the call for papers is a complete static page with the deployed origin and
   const stylesheet = html.match(/href="\/(styles\.[a-f0-9]{12}\.css)"/)[1];
   assert.equal(await readFile(join(result.outputDirectory, stylesheet), 'utf8'), 'body{font-family:serif}');
   assert.ok((await readFile(join(result.outputDirectory, 'sitemap.xml'), 'utf8')).includes(`<loc>${url}</loc>`));
-  assert.ok((await readFile(join(result.outputDirectory, 'llms.txt'), 'utf8')).includes(`[Call for papers](${url})`));
+  const agentGuide = await readFile(join(result.outputDirectory, 'llms.txt'), 'utf8');
+  assert.ok(agentGuide.includes(`[Call for papers](${url})`));
+  assert.ok(agentGuide.includes(currentCall.editorialQuestion));
+  const publicJournal = JSON.parse(await readFile(join(result.outputDirectory, 'journal.json'), 'utf8'));
+  assert.deepEqual(publicJournal.currentCall, { ...currentCall, url });
+  const articleFeed = await readFile(join(result.outputDirectory, 'rss.xml'), 'utf8');
+  assert.ok(!articleFeed.includes(currentCall.editorialQuestion));
   const manifest = JSON.parse(await readFile(join(result.outputDirectory, 'export-manifest.json'), 'utf8'));
   assert.ok(manifest.files.some(file => file.path === 'call-for-papers/index.html'));
 
