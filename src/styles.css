@@ -128,6 +128,8 @@
 .cfp-status small{display:block;margin-top:15px;font-size:11px;letter-spacing:.015em;color:var(--muted)}
 .cfp-introduction{max-width:870px;padding:39px 0 25px}
 .cfp-introduction p{font:19px/1.75 var(--serif);margin-bottom:19px}
+.pilot-bar a{color:inherit;text-underline-offset:.2em}
+.cfp-introduction h2{font:clamp(30px,4vw,48px)/1.12 var(--serif);letter-spacing:-.025em;margin:0 0 .55em}
 .cfp-introduction .cfp-invitation{font-size:27px;line-height:1.5;letter-spacing:-.018em;margin-bottom:23px}
 .cfp-scope{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:24px 0 27px}
 .cfp-scope h2{margin:0 0 16px;color:var(--muted)}
